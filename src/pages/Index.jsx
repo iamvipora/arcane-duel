@@ -22,9 +22,15 @@ function Index() {
           </Link>
         </div>
         <footer className='flex items-center place-content-center gap-4 text-3xl  '>
-          <FaLinkedin />
-          <FaGithubSquare />
-          <MdEmail />
+          <a href="https://www.linkedin.com/in/john-henry-dizon/">
+            <FaLinkedin />
+          </a>
+          <a href="https://github.com/iamvipora">
+            <FaGithubSquare />
+          </a>
+          <a href="mailto:henrydizon99@gmail.com">
+            <MdEmail />
+          </a>      
         </footer>
       </div>  
     </div>
