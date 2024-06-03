@@ -15,16 +15,35 @@ function Shop(props) {
   const [cartTotalPrice, setCartTotalPrice] = useState(0)
   const [shopState, setShopState] = useState('off')
 
-  const handleClick = (e) => {
-    if (e.currentTarget.value === 'buy'){
+  const resetShop = () => {
+    setShopState('off')
+    setCartItemQuantity({potion: 0, barrier: 0, doubleSword: 0})
+    setCartQuantity(0)
+    setCartTotalPrice(0)
+  }
+
+  const handleClick = (action) => {
+    if(action == 'buy'){
       setShopState('buy')
-    } else if(e.currentTarget.value === 'sell'){
+    } else if(action == 'sell'){
       setShopState('sell')
-    } else if(e.currentTarget.value === 'cancel'){
-      setShopState('off')
-      setCartItemQuantity({potion: 0, barrier: 0, doubleSword: 0})
-      setCartQuantity(0)
-      setCartTotalPrice(0)
+    } else if(action == 'cancel'){
+      resetShop()
+    }
+
+    if(action == 'buyItems'){
+      if(props.playerGold >= cartTotalPrice){
+        props.setPlayerItem(prevState => ({
+          ...prevState,
+          potion: prevState.potion + cartItemQuantity.potion,
+          barrier: prevState.barrier + cartItemQuantity.barrier,
+          doubleSword: prevState.doubleSword + cartItemQuantity.doubleSword
+        }))
+        props.setPlayerGold(prevState => prevState - cartTotalPrice)
+      }
+      resetShop()
+    } else if(action == 'sellItems'){
+      
     }
   }
 
@@ -39,7 +58,7 @@ function Shop(props) {
       icon: PotionIcon,
       value: 'potion',
       description: 'Consume a red potion and gain 20 HP back.',
-      quantity: props.itemQuantity.potion,
+      quantity: props.playerItem.potion,
       key: 'potion',
       buyPrice: 100,
       sellPrice: 50
@@ -48,19 +67,19 @@ function Shop(props) {
       icon: BarrierIcon,
       value: 'barrier',
       description: 'Cast a barrier on yourself and block the next attack.',
-      quantity: props.itemQuantity.barrier,
+      quantity: props.playerItem.barrier,
       key: 'barrier',
-      buyPrice: 100,
-      sellPrice: 50
+      buyPrice: 150,
+      sellPrice: 75
     },
     {
       icon: DoubleEdgedSwordIcon,
       value: 'doubleSword',
       description: 'Increase damage dealt and receive by 2x for 1 turn.',
-      quantity: props.itemQuantity.doubleSword,
+      quantity: props.playerItem.doubleSword,
       key: 'doubleSword',
-      buyPrice: 100,
-      sellPrice: 50
+      buyPrice: 200,
+      sellPrice: 100
     }
   ]
 
@@ -71,6 +90,8 @@ function Shop(props) {
     shopState={shopState}
     cartItemQuantity={cartItemQuantity}
     setCartItemQuantity={setCartItemQuantity}
+    cartTotalPrice={cartTotalPrice}
+    setCartTotalPrice={setCartTotalPrice}
   />
   })
 
@@ -96,18 +117,19 @@ function Shop(props) {
             <button 
               className='border px-4 bg-gray-600'
               value={shopState !== 'buy' && shopState !== 'sell' ? 'buy' : 'cancel'}
-              onClick={handleClick}  
+              onClick={(e) => handleClick(e.currentTarget.value)}  
             >
               <p>{shopState == 'off' ? 'Buy' : 'Cancel'}</p>
             </button>
             <button 
               className='border px-4 bg-gray-600'
               value={shopState == 'buy' ? 'buyItems' : shopState == 'sell' ? 'sellItems' : 'sell'}
-              onClick={handleClick}  
+              onClick={(e) => handleClick(e.currentTarget.value)}  
             > 
               <p>{shopState == 'buy' ? 'Buy' : 'Sell'}</p>
             </button>
-          </div>          
+          </div>
+        {cartTotalPrice > 0 && <p className='font-dotgothic16-regular'>{`Total price: ${cartTotalPrice} for ${cartQuantity} items.`}</p>}           
         </div>
         <footer>  
           <Link to='/'>

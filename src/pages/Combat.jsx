@@ -64,13 +64,13 @@ function Combat(props) {
     const randomNumber = Math.random()
     let enemyMove = ''
   
-    if (randomNumber >= 0 && randomNumber < 1/3) {
+    if(randomNumber >= 0 && randomNumber < 1/3){
       enemyMove = 'Shield'
     }
-    else if (randomNumber >= 1/3 && randomNumber < 2/3) {
+    else if(randomNumber >= 1/3 && randomNumber < 2/3){
       enemyMove = 'Staff'
     }
-    else if (randomNumber >= 2/3 && randomNumber <= 1) {
+    else if(randomNumber >= 2/3 && randomNumber <= 1){
       enemyMove = 'Sword'
     }
     return enemyMove
@@ -84,7 +84,7 @@ function Combat(props) {
     isDoubleDamageEnabled ? damage = 40 : damage = 20
 
     setTimeout(() => {
-      if (playerMove === enemyMove){
+      if(playerMove === enemyMove){
         result = 'Tie'
       } else if(playerMove === 'Shield'){
         if(enemyMove === 'Sword'){
@@ -95,13 +95,13 @@ function Combat(props) {
       } else if(playerMove === 'Staff'){
         if(enemyMove === 'Shield'){
           result = 'Win'
-        } else if (enemyMove === 'Sword'){
+        } else if(enemyMove === 'Sword'){
           result = 'Lose'
         }
       } else if(playerMove === 'Sword'){
         if(enemyMove === 'Staff'){
           result = 'Win'
-        } else if (enemyMove === 'Shield'){
+        } else if(enemyMove === 'Shield'){
           result = 'Lose'
         }
       } else{
@@ -110,7 +110,7 @@ function Combat(props) {
 
       (isBarrierEnabled || isDoubleDamageEnabled) ? setIsBtnDisabled(true) : setIsBtnDisabled(false)
 
-      if (result === 'Win'){
+      if(result === 'Win'){
         if(enemyHealth - damage < 0){
           damage = enemyHealth
         }

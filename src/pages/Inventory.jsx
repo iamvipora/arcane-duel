@@ -14,21 +14,21 @@ function Inventory(props) {
       icon: PotionIcon,
       value: 'Potion',
       description: 'Consume a red potion and gain 20 HP back.',
-      quantity: props.itemQuantity.potion,
+      quantity: props.playerItem.potion,
       key: 'potion'
     },
     {
       icon: BarrierIcon,
       value: 'Barrier',
       description: 'Cast a barrier on yourself and block the next attack.',
-      quantity: props.itemQuantity.barrier,
+      quantity: props.playerItem.barrier,
       key: 'barrier'
     },
     {
       icon: DoubleEdgedSwordIcon,
       value: 'Double-Edged Sword',
       description: 'Increase damage dealt and receive by 2x for 1 turn.',
-      quantity: props.itemQuantity.doubleSword,
+      quantity: props.playerItem.doubleSword,
       key: 'double-edged sword'
     }
   ]
@@ -52,6 +52,17 @@ function Inventory(props) {
             <div className='flex flex-col gap-3'>
               {renderItemBox}
             </div>
+            <button onClick={()=> {props.setPlayerItem(prevState => ({
+              ...prevState,
+              potion: prevState.potion + 1,
+              barrier: prevState.barrier + 1,
+              doubleSword: prevState.doubleSword + 1
+            }))}}>
+              Add supplies
+            </button>
+            <button onClick={() =>{props.setPlayerItem({potion: 0, barrier: 0, doubleSword: 0})}}>
+              Reset supplies
+            </button>
           </div>
         <footer>
           <Link to='/'>

@@ -8,12 +8,16 @@ import Shop from './pages/Shop'
 
 function App() {
   const [playerGold, setPlayerGold] = useState(JSON.parse(localStorage.getItem('playerGold')) || 1000)
-  const [itemQuantity, setItemQuantity] = useState(JSON.parse(localStorage.getItem('playerItem')) || {potion: 0, barrier: 0, doubleSword: 0})
+  const [playerItem, setPlayerItem] = useState(JSON.parse(localStorage.getItem('playerItem')) || {potion: 0, barrier: 0, doubleSword: 0})
 
   useEffect(() => {
-    JSON.stringify(localStorage.setItem('playerGold', playerGold))
+    localStorage.setItem('playerGold', JSON.stringify(playerGold))
   }, [playerGold])
-  
+
+  useEffect(() => {
+    localStorage.setItem('playerItem', JSON.stringify(playerItem))
+  }, [playerItem])
+
   return (
     <BrowserRouter>
       <Routes>
@@ -23,23 +27,27 @@ function App() {
           <Combat 
             playerGold={playerGold} 
             setPlayerGold={setPlayerGold}
-            itemQuantity={itemQuantity}
-            setItemQuantity={setItemQuantity}
+            playerItem={playerItem}
+            setPlayerItem={setPlayerItem}
            />} 
           />
         <Route path='/inventory' 
           element={
           <Inventory 
             playerGold={playerGold}
-            itemQuantity={itemQuantity}
-          />} />
+            playerItem={playerItem}
+            setPlayerItem={setPlayerItem}
+          />} 
+        />
         <Route path='/shop' 
           element={
           <Shop 
             playerGold={playerGold}
-            itemQuantity={itemQuantity}
-            setItemQuantity={setItemQuantity}
-          />} />
+            setPlayerGold={setPlayerGold}
+            playerItem={playerItem}
+            setPlayerItem={setPlayerItem}
+          />} 
+        />
         <Route path='*' element={<Error />}/>
       </Routes>
     </BrowserRouter>
