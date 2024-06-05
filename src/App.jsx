@@ -35,6 +35,7 @@ function App() {
           element={
           <Inventory 
             playerGold={playerGold}
+            setPlayerGold={setPlayerGold}
             playerItem={playerItem}
             setPlayerItem={setPlayerItem}
           />} 

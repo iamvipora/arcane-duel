@@ -4,18 +4,39 @@ import { useLocation } from 'react-router-dom'
 function ItemBox(props) {
 
   const location = useLocation()
-  const updateItemQuantity = (type, price, item, newQuantity) => {
+
+  const updateQuantity = (type, item) => {
+    const newQuantity = (type == 'removeItem') ? props.cartItemQuantity[item] - 1 : props.cartItemQuantity[item] + 1
     props.setCartItemQuantity(prevState => ({
       ...prevState,
       [item]: Math.max(newQuantity, 0)
     }))
-    props.setCartTotalPrice(prevState => prevState + price)
-    // if(type == 'buy') {
-    //   console.log('buy')
-    // } else if(type == 'sell') {
-    //   console.log('sell')
-    // }
   }
+
+  const updateCart = (type, action, price, item) => {
+    if(action == 'buy'){
+      if(type == 'addItem'){
+        if (props.cartTotalPrice + price <= props.playerGold){
+            props.setCartTotalPrice(prevState => prevState + price)
+            updateQuantity(type, item)
+          }
+        } else if(type == 'removeItem' && props.cartItemQuantity[item] > 0){
+            props.setCartTotalPrice(prevState => prevState - price)
+            updateQuantity(type, item)
+          }
+    } else if(action == 'sell'){
+      if(type == 'addItem'){
+        if(props.cartItemQuantity[item] + 1 <= props.playerItem[item]){
+            props.setCartTotalPrice(prevState => prevState + price)
+            updateQuantity(type, item)
+          }
+        } else if(type == 'removeItem' && props.cartItemQuantity[item] > 0){
+            props.setCartTotalPrice(prevState => prevState - price)
+            updateQuantity(type, item)
+          }
+    }
+  }
+  
   return (
     <div className='border flex flex-col bg-gray-600 hover:bg-gray-800 items-center mb-auto'>
         <div className='relative flex items-start p-1'>
@@ -38,11 +59,11 @@ function ItemBox(props) {
               <p> Price: <span className='text-green-500'>{props.data.buyPrice}</span></p>
               <p className='flex gap-2'>
                 Quanitity: {props.cartItemQuantity[props.data.value]}
-                <button onClick={() => updateItemQuantity('buy', props.data.buyPrice, props.data.value, props.cartItemQuantity[props.data.value] - 1)}>
+                <button onClick={() => updateCart('removeItem', 'buy', props.data.buyPrice, props.data.value)}>
                   -
                 </button>
                 |
-                <button onClick={() => updateItemQuantity('buy', props.data.buyPrice, props.data.value, props.cartItemQuantity[props.data.value] + 1)}>
+                <button onClick={() => updateCart('addItem', 'buy', props.data.buyPrice, props.data.value)}>
                   +
                 </button>
               </p>
@@ -53,12 +74,12 @@ function ItemBox(props) {
             <div className='text-sm font-dotgothic16-regular flex justify-between w-3/4'>
               <p> Price: <span className='text-red-500'>{props.data.sellPrice}</span></p>
               <p className='flex gap-2'>
-                Quanitity: {props.cartItemQuantity[props.data.value]}
-                <button onClick={() => updateItemQuantity('sell', props.data.sellPrice, props.data.value, props.cartItemQuantity[props.data.value] - 1)}>
+                Quanitity: {`${props.cartItemQuantity[props.data.value]}/${props.playerItem[props.data.value]}`}
+                <button onClick={() => updateCart('removeItem', 'sell', props.data.buyPrice, props.data.value)}>
                   -
                 </button>
                 |
-                <button onClick={() => updateItemQuantity('sell', props.data.sellPrice, props.data.value, props.cartItemQuantity[props.data.value] + 1)}>
+                <button onClick={() => updateCart('addItem', 'sell', props.data.buyPrice, props.data.value)}>
                   +
                 </button>
             </p>

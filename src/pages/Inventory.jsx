@@ -52,17 +52,25 @@ function Inventory(props) {
             <div className='flex flex-col gap-3'>
               {renderItemBox}
             </div>
-            <button onClick={()=> {props.setPlayerItem(prevState => ({
-              ...prevState,
-              potion: prevState.potion + 1,
-              barrier: prevState.barrier + 1,
-              doubleSword: prevState.doubleSword + 1
-            }))}}>
-              Add supplies
-            </button>
-            <button onClick={() =>{props.setPlayerItem({potion: 0, barrier: 0, doubleSword: 0})}}>
-              Reset supplies
-            </button>
+            <div className='flex flex-col gap-2 p-4'>
+              <button onClick={()=> {props.setPlayerItem(prevState => ({
+                ...prevState,
+                potion: prevState.potion + 1,
+                barrier: prevState.barrier + 1,
+                doubleSword: prevState.doubleSword + 1
+              }))}}>
+                Add supplies
+              </button>
+              <button onClick={() =>{props.setPlayerItem({potion: 0, barrier: 0, doubleSword: 0})}}>
+                Reset supplies
+              </button>
+              <button onClick={() =>{props.setPlayerGold(prevState => prevState + 1000)}}>
+                Add gold
+              </button>
+              <button onClick={() =>{props.setPlayerGold(0)}}>
+                Reset gold
+              </button>
+            </div>
           </div>
         <footer>
           <Link to='/'>

@@ -13,8 +13,34 @@ function Shop(props) {
   const [cartItemQuantity, setCartItemQuantity] = useState({potion: 0, barrier: 0, doubleSword: 0})
   const [cartQuantity, setCartQuantity] = useState(0)
   const [cartTotalPrice, setCartTotalPrice] = useState(0)
-  const [shopState, setShopState] = useState('off')
 
+  const [shopState, setShopState] = useState('off')
+  
+  const [isAlertVisible, setIsAlertVisible] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
+  const [fadeClass, setFadeClass] = useState('animate-fadeIn')
+  
+
+  useEffect(() => {
+    let newCartQuantity = cartItemQuantity.potion + cartItemQuantity.barrier + cartItemQuantity.doubleSword
+    setCartQuantity(newCartQuantity)
+  }, [cartItemQuantity])
+
+  useEffect(() => {
+    setIsAlertVisible(true)
+    setFadeClass('animate-fadeIn')
+
+    const timer = setTimeout(() => {
+      setFadeClass('animate-fadeOut')
+      setTimeout(() => {
+        setIsAlertVisible(false)
+        setAlertMessage('')
+      }, 900)
+    }, 3000)
+
+    return () => clearTimeout(timer);
+  }, [alertMessage])
+  
   const resetShop = () => {
     setShopState('off')
     setCartItemQuantity({potion: 0, barrier: 0, doubleSword: 0})
@@ -32,26 +58,35 @@ function Shop(props) {
     }
 
     if(action == 'buyItems'){
-      if(props.playerGold >= cartTotalPrice){
+      if(cartTotalPrice != 0){
         props.setPlayerItem(prevState => ({
           ...prevState,
           potion: prevState.potion + cartItemQuantity.potion,
           barrier: prevState.barrier + cartItemQuantity.barrier,
           doubleSword: prevState.doubleSword + cartItemQuantity.doubleSword
         }))
+        setAlertMessage(`Bought ${cartQuantity} item(s) for ${cartTotalPrice}`)
         props.setPlayerGold(prevState => prevState - cartTotalPrice)
+      } else{
+        setAlertMessage('There were no items on the cart')
       }
       resetShop()
     } else if(action == 'sellItems'){
-      
+      if(cartItemQuantity != 0){
+        props.setPlayerItem(prevState => ({
+          ...prevState,
+          potion: prevState.potion - cartItemQuantity.potion,
+          barrier: prevState.barrier - cartItemQuantity.barrier,
+          doubleSword: prevState.doubleSword - cartItemQuantity.doubleSword
+        }))
+        setAlertMessage(`Sold ${cartQuantity} item(s) for ${cartTotalPrice}`)
+        props.setPlayerGold(prevState => prevState + cartTotalPrice)
+      } else{
+        setAlertMessage('Sold 0 items')
+      }
+      resetShop()
     }
   }
-
-  useEffect(() => {
-    let newCartQuantity = cartItemQuantity.potion + cartItemQuantity.barrier + cartItemQuantity.doubleSword
-    setCartQuantity(newCartQuantity)
-  }, [cartItemQuantity])
-
 
   const items = [
     {
@@ -85,13 +120,15 @@ function Shop(props) {
 
   const renderItemBox = items.map((value) => {
     return <ItemBox
-    key={value.key}
     data={value}
+    key={value.key}
     shopState={shopState}
     cartItemQuantity={cartItemQuantity}
     setCartItemQuantity={setCartItemQuantity}
     cartTotalPrice={cartTotalPrice}
     setCartTotalPrice={setCartTotalPrice}
+    playerGold={props.playerGold}
+    playerItem={props.playerItem}
   />
   })
 
@@ -129,7 +166,10 @@ function Shop(props) {
               <p>{shopState == 'buy' ? 'Buy' : 'Sell'}</p>
             </button>
           </div>
-        {cartTotalPrice > 0 && <p className='font-dotgothic16-regular'>{`Total price: ${cartTotalPrice} for ${cartQuantity} items.`}</p>}           
+          <div className='flex flex-col gap-2'>
+            {cartTotalPrice > 0 && <p className='font-dotgothic16-regular'>{`Total price: ${cartTotalPrice} for ${cartQuantity} items.`}</p>} 
+            {isAlertVisible && <p className={`font-dotgothic16-regular ${fadeClass}`}>{alertMessage}</p>}       
+          </div>
         </div>
         <footer>  
           <Link to='/'>
