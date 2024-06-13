@@ -54,7 +54,6 @@ function Inventory(props) {
             </div>
             <div className='flex flex-col gap-2 p-4'>
               <button onClick={()=> {props.setPlayerItem(prevState => ({
-                ...prevState,
                 potion: prevState.potion + 1,
                 barrier: prevState.barrier + 1,
                 doubleSword: prevState.doubleSword + 1

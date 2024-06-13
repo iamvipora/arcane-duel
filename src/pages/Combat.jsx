@@ -20,7 +20,7 @@ function Combat(props) {
   const [isDoubleDamageEnabled, setIsDoubleDamageEnabled] = useState(false)
   
   const attack = ['Shield', 'Staff', 'Sword']
-  const items = ['Potion', 'Barrier', 'Double-Edged Sword']
+  const items = ['potion', 'barrier', 'doubleSword']
 
   const navigate = useNavigate()
 
@@ -106,6 +106,7 @@ function Combat(props) {
         }
       } else{
         setGameText('Invalid move.')
+        setIsBtnDisabled(false)
       }
 
       (isBarrierEnabled || isDoubleDamageEnabled) ? setIsBtnDisabled(true) : setIsBtnDisabled(false)
@@ -150,37 +151,68 @@ function Combat(props) {
 
   const useItem = (playerMove) => {
     setTimeout(() => {
-      if(playerMove === 'Potion'){
-        if(playerHealth < 100){
+      if(playerMove === 'potion'){
+        if(playerHealth < 100 && props.playerItem[playerMove] > 0){
           if(playerHealth + 20 > 100){
             const heal = 100 - playerHealth
+            props.setPlayerItem(prevState => ({
+              ...prevState,
+              [playerMove]: prevState[playerMove] - 1
+            }))
             setGameText(`Potion has been consumed. ${heal} HP restored.`)
             setPlayerHealth(prevPlayerHealth => prevPlayerHealth + heal)
           } else {
+            props.setPlayerItem(prevState => ({
+              ...prevState,
+              [playerMove]: prevState[playerMove] - 1
+            }))
             setGameText(`Potion has been consumed. 20 HP restored`)
             setPlayerHealth(prevPlayerHealth => prevPlayerHealth + 20)
           }
+        } else if(props.playerItem[playerMove] <= 0){
+          setGameText('You are out of potions.')
         } else {
           setGameText('Your HP is already Full.')
         }
-      } else if(playerMove === 'Barrier'){
+      } else if(playerMove === 'barrier'){
         if(isBarrierEnabled){
           setIsBarrierEnabled(false)
+          props.setPlayerItem(prevState => ({
+            ...prevState,
+            [playerMove]: prevState[playerMove] + 1
+          }))
           setGameText('You uncast your barrier.')
-        } else{
+        } else if(!isBarrierEnabled && props.playerItem[playerMove] > 0){
           setIsBarrierEnabled(true)
+          props.setPlayerItem(prevState => ({
+            ...prevState,
+            [playerMove]: prevState[playerMove] - 1
+          }))
           setGameText('You cast a barrier around yourself. Block the next attack from your enemy. (Lasts for 1 turn)')
-        } 
-      } else if(playerMove === 'Double-Edged Sword'){
+        } else{
+          setGameText('You are out of barriers.')
+        }
+      } else if(playerMove === 'doubleSword'){
         if(isDoubleDamageEnabled){
           setIsDoubleDamageEnabled(false)
+          props.setPlayerItem(prevState => ({
+            ...prevState,
+            [playerMove]: prevState[playerMove] + 1
+          }))
           setGameText('You withdraw your double-edged sword.')
-        } else{
+        } else if(!isDoubleDamageEnabled && props.playerItem[playerMove] > 0){
           setIsDoubleDamageEnabled(true)
+          props.setPlayerItem(prevState => ({
+            ...prevState,
+            [playerMove]: prevState[playerMove] - 1
+          }))
           setGameText('You draw a double-edged sword. Deal and receive 2x the damage. (Lasts for 1 turn)')
+        } else{
+          setGameText('You are out of Double-Edged Swords.')
         }
       } else{
         setGameText('Invalid move.')
+        setIsBtnDisabled(false)
       }
       setIsBtnDisabled(false)
     }, 2000)
@@ -196,6 +228,7 @@ function Combat(props) {
     } else (
       setTimeout(() => {
         setGameText('Invalid move.')
+        setIsBtnDisabled(false)
       }, 2000)  
     )
   }
@@ -230,7 +263,7 @@ function Combat(props) {
   const playerItems = [
     {
       icon: PotionIcon,
-      value: 'Potion',
+      value: 'potion',
       description: 'Consume a red potion and gain 20 HP back.',
       handleClick: handleClick,
       key: 'potion',
@@ -238,7 +271,7 @@ function Combat(props) {
     },
     {
       icon: BarrierIcon,
-      value: 'Barrier',
+      value: 'barrier',
       description: 'Cast a barrier on yourself and block the next attack.',
       handleClick: handleClick,
       key: 'barrier',
@@ -246,10 +279,10 @@ function Combat(props) {
     },
     {
       icon: DoubleEdgedSwordIcon,
-      value: 'Double-Edged Sword',
+      value: 'doubleSword',
       description: 'Increase damage dealt and receive by 2x for 1 turn.',
       handleClick: handleClick,
-      key: 'double-edged sword',
+      key: 'doubleSword',
       isBtnDisabled: isBtnDisabled
     }
   ]
@@ -265,6 +298,7 @@ function Combat(props) {
     return <ActionBox
       key={value.key}
       data={value}
+      playerItem={props.playerItem}
     />
   })
 
