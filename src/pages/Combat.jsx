@@ -8,7 +8,7 @@ import SwordIcon from '/images/sword.png'
 import BackgroundImage from '/images/background.jpg'
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
 
-function Combat({items, playerGold, playerItem, setPlayerGold, setPlayerItem}) {
+function Combat({ items, playerGold, playerItem, setPlayerGold, setPlayerItem }) {
   const [playerHealth, setPlayerHealth] = useState(100)
   const [enemyHealth, setEnemyHealth] = useState(100)
   const [gameText, setGameText] = useState('Initiating Combat.')
@@ -90,9 +90,10 @@ function Combat({items, playerGold, playerItem, setPlayerGold, setPlayerItem}) {
   }))
     
   const renderMoveSet = moveSet.map(data => {
-    return <ActionBox
+    return <ActionBox   
       key={data.key}
       data={data}
+      itemName={itemName}
     />
   })
 
@@ -100,6 +101,7 @@ function Combat({items, playerGold, playerItem, setPlayerGold, setPlayerItem}) {
     return <ActionBox
       key={data.key}
       data={data}
+      itemName={itemName}
       playerItem={playerItem}
     />
   })

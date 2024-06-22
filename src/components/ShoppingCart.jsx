@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ShoppingCart = ({items, shopState, cartQuantity, cartItemQuantity, cartTotalPrice, showCart, setShowCart}) => {
+const ShoppingCart = ({ items, shopState, cartQuantity, cartItemQuantity, cartTotalPrice, showCart, setShowCart }) => {
   const cartItem = items.map((item) => ({
     ...item,
     cartQuantity: cartItemQuantity[item.value]

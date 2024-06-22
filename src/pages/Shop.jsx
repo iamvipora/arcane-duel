@@ -6,7 +6,7 @@ import { FaShoppingCart } from "react-icons/fa"
 import BackgroundImage from '/images/background.jpg'
 import GoldCoinsIcon from '/images/gold-coins.png'
 
-function Shop({playerGold, playerItem, setPlayerGold, setPlayerItem, items}) {
+function Shop({ playerGold, playerItem, setPlayerGold, setPlayerItem, items }) {
   const [cartItemQuantity, setCartItemQuantity] = useState({potion: 0, barrier: 0, doubleSword: 0})
   const [cartQuantity, setCartQuantity] = useState(0)
   const [cartTotalPrice, setCartTotalPrice] = useState(0)

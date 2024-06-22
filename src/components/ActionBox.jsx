@@ -1,20 +1,18 @@
 import React from 'react'
 
-function ActionBox(props) {
-
-  const items = ['potion', 'barrier', 'doubleSword']
+function ActionBox({ data, itemName, playerItem }) {
 
   return (
     <button 
-      className={`flex p-2 border ${!props.data.isBtnDisabled ? 'bg-gray-700' : 'bg-gray-900'}`}
-      value={props.data.value} 
-      onClick={(e) => props.data.handleClick(e.currentTarget.value)}
-      disabled={props.data.isBtnDisabled}
+      className={`flex p-2 border ${!data.isBtnDisabled ? 'bg-gray-700' : 'bg-gray-900'}`}
+      value={data.value} 
+      onClick={(e) => data.handleClick(e.currentTarget.value)}
+      disabled={data.isBtnDisabled}
     >
-      {items.includes(props.data.value) && <p className='top-0 left-0 text-[0.6rem] font-press-start'>{props.playerItem[props.data.value]}x</p>}
+      {itemName.includes(data.value) && <p className='top-0 left-0 text-[0.6rem] font-press-start'>{playerItem[data.value]}x</p>}
       <div className='flex items-center gap-2 text-left'>
-        <img className={`${items.includes(props.data.value) ? 'py-2 pr-2' : 'p-2'}`} src={props.data.icon} alt='Icon'/>
-        {props.data.description}
+        <img className={`${itemName.includes(data.value) ? 'py-2 pr-2' : 'p-2'}`} src={data.icon} alt='Icon'/>
+        {data.description}
       </div>
     </button>
   )

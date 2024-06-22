@@ -1,7 +1,8 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
+import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
 
-function ItemBox({data, shopState, playerGold, playerItem, cartTotalPrice, cartItemQuantity, setCartTotalPrice, setCartItemQuantity}) {
+function ItemBox({ data, shopState, playerGold, playerItem, cartTotalPrice, cartItemQuantity, setCartTotalPrice, setCartItemQuantity }) {
 
   const location = useLocation()
 
