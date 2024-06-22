@@ -6,7 +6,7 @@ function ActionBox(props) {
 
   return (
     <button 
-      className={`flex p-2 border ${!props.data.isBtnDisabled ? 'bg-gray-600' : 'bg-gray-900'}`}
+      className={`flex p-2 border ${!props.data.isBtnDisabled ? 'bg-gray-700' : 'bg-gray-900'}`}
       value={props.data.value} 
       onClick={(e) => props.data.handleClick(e.currentTarget.value)}
       disabled={props.data.isBtnDisabled}

@@ -5,22 +5,23 @@ import GoldCoinsIcon from '/images/gold-coins.png'
 import ShieldIcon from '/images/shield.png'
 import StaffIcon from '/images/staff.png'
 import SwordIcon from '/images/sword.png'
-import PotionIcon from '/images/potion.png'
-import DoubleEdgedSwordIcon from '/images/2-sword.png'
-import BarrierIcon from '/images/barrier.png'
 import BackgroundImage from '/images/background.jpg'
+import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
 
-function Combat(props) {
+function Combat({items, playerGold, playerItem, setPlayerGold, setPlayerItem}) {
   const [playerHealth, setPlayerHealth] = useState(100)
   const [enemyHealth, setEnemyHealth] = useState(100)
   const [gameText, setGameText] = useState('Initiating Combat.')
-  const [activeTab, setActiveTab] = useState(true)
+
   const [isBtnDisabled, setIsBtnDisabled] = useState(false)
   const [isBarrierEnabled, setIsBarrierEnabled] = useState(false)
   const [isDoubleDamageEnabled, setIsDoubleDamageEnabled] = useState(false)
+
+  const [activeTab, setActiveTab] = useState('Attack')
+  const [isOpen, setIsOpen] = useState(false)
   
   const attack = ['Shield', 'Staff', 'Sword']
-  const items = ['potion', 'barrier', 'doubleSword']
+  const itemName = [items[0].key, items[1].key, items[2].key]
 
   const navigate = useNavigate()
 
@@ -29,19 +30,82 @@ function Combat(props) {
       setGameText('You died after losing all your HP.')
       setTimeout(() => {
         resetGame()
-      }, 2000)
+      }, 1500)
       
     } else if (enemyHealth === 0) {
       setGameText('You broke apart your enemy and won. Gain an additional 100 gold for winning.')
       updatePlayerGold()
       setTimeout(() => {
         resetGame()
-      }, 2000)
+      }, 1500)
     }
   }, [playerHealth, enemyHealth])
 
+  const handleClick = (playerMove) => {
+    setIsBtnDisabled(true)
+    setGameText('...')
+    if(attack.includes(playerMove)){
+      playGame(playerMove)
+    } else if(itemName.includes(playerMove)){
+      useItem(playerMove)
+    } else (
+      setTimeout(() => {
+        setGameText('Invalid move.')
+        setIsBtnDisabled(false)
+      }, 1500)  
+    )
+  }
+
+  const moveSet = [
+    {
+      icon: ShieldIcon,
+      value: 'Shield',
+      description: 'You hold your shield and stand your ground. Blocks swords and render them useless.',
+      handleClick: handleClick,
+      key: 'shield',
+      isBtnDisabled: isBtnDisabled
+    },
+    {
+      icon: StaffIcon,
+      value: 'Staff',
+      description: 'You raise your staff and cast a strong spell. This blast shields into smitherins.',
+      handleClick: handleClick,
+      key: 'staff',
+      isBtnDisabled: isBtnDisabled
+    },
+    {
+      icon: SwordIcon,
+      value: 'Sword',
+      description: 'You draw your Sword and strike your foe. With your speed, casters are defenseless.',
+      handleClick: handleClick,
+      key: 'sword',
+      isBtnDisabled: isBtnDisabled
+    }
+  ]
+
+  const playerItems = items.map(data => ({
+    ...data,
+    handleClick: handleClick,
+    isBtnDisabled: isBtnDisabled
+  }))
+    
+  const renderMoveSet = moveSet.map(data => {
+    return <ActionBox
+      key={data.key}
+      data={data}
+    />
+  })
+
+  const renderPlayerItems = playerItems.map(data => {
+    return <ActionBox
+      key={data.key}
+      data={data}
+      playerItem={playerItem}
+    />
+  })
+
   const updatePlayerGold = () => {
-    props.setPlayerGold(prevPlayerGold => prevPlayerGold + 100)
+    setPlayerGold(prevPlayerGold => prevPlayerGold + 100)
   }
 
   const resetGame = () => {
@@ -50,14 +114,20 @@ function Combat(props) {
     setEnemyHealth('100')
     setTimeout(() => {
       setGameText('You have been granted an opportunity to attack. Choose an item from your arsenal to use.')
-    }, 2000)
+    }, 1500)
   }
 
   const surrender = () => {
+    setIsOpen(prev => !prev)
     setGameText('The Necromancer shames you for running away.')
     setTimeout(() => {
       navigate('/')
-    }, 2000)
+    }, 1500)
+  }
+
+  const tabChange = (tab) => {
+    setActiveTab(tab)
+    setIsOpen(prev => !prev)
   }
 
   const pickEnemyMove = () => {
@@ -136,7 +206,7 @@ function Combat(props) {
         setTimeout(() => {
           setIsBtnDisabled(false)
           setGameText('Your barrier fades away.')
-        }, 2000)
+        }, 1500)
       }
 
       if(isDoubleDamageEnabled){
@@ -144,32 +214,32 @@ function Combat(props) {
         setTimeout(() => {
           setIsBtnDisabled(false)
           setGameText('You withdraw your double-edged sword.')
-        }, 2000)
+        }, 1500)
       }
-    }, 2000)
+    }, 1500)
   }
 
   const useItem = (playerMove) => {
     setTimeout(() => {
       if(playerMove === 'potion'){
-        if(playerHealth < 100 && props.playerItem[playerMove] > 0){
+        if(playerHealth < 100 && playerItem[playerMove] > 0){
           if(playerHealth + 20 > 100){
             const heal = 100 - playerHealth
-            props.setPlayerItem(prevState => ({
+            setPlayerItem(prevState => ({
               ...prevState,
               [playerMove]: prevState[playerMove] - 1
             }))
             setGameText(`Potion has been consumed. ${heal} HP restored.`)
             setPlayerHealth(prevPlayerHealth => prevPlayerHealth + heal)
           } else {
-            props.setPlayerItem(prevState => ({
+            setPlayerItem(prevState => ({
               ...prevState,
               [playerMove]: prevState[playerMove] - 1
             }))
             setGameText(`Potion has been consumed. 20 HP restored`)
             setPlayerHealth(prevPlayerHealth => prevPlayerHealth + 20)
           }
-        } else if(props.playerItem[playerMove] <= 0){
+        } else if(playerItem[playerMove] <= 0){
           setGameText('You are out of potions.')
         } else {
           setGameText('Your HP is already Full.')
@@ -177,14 +247,14 @@ function Combat(props) {
       } else if(playerMove === 'barrier'){
         if(isBarrierEnabled){
           setIsBarrierEnabled(false)
-          props.setPlayerItem(prevState => ({
+          setPlayerItem(prevState => ({
             ...prevState,
             [playerMove]: prevState[playerMove] + 1
           }))
           setGameText('You uncast your barrier.')
-        } else if(!isBarrierEnabled && props.playerItem[playerMove] > 0){
+        } else if(!isBarrierEnabled && playerItem[playerMove] > 0){
           setIsBarrierEnabled(true)
-          props.setPlayerItem(prevState => ({
+          setPlayerItem(prevState => ({
             ...prevState,
             [playerMove]: prevState[playerMove] - 1
           }))
@@ -195,14 +265,14 @@ function Combat(props) {
       } else if(playerMove === 'doubleSword'){
         if(isDoubleDamageEnabled){
           setIsDoubleDamageEnabled(false)
-          props.setPlayerItem(prevState => ({
+          setPlayerItem(prevState => ({
             ...prevState,
             [playerMove]: prevState[playerMove] + 1
           }))
           setGameText('You withdraw your double-edged sword.')
-        } else if(!isDoubleDamageEnabled && props.playerItem[playerMove] > 0){
+        } else if(!isDoubleDamageEnabled && playerItem[playerMove] > 0){
           setIsDoubleDamageEnabled(true)
-          props.setPlayerItem(prevState => ({
+          setPlayerItem(prevState => ({
             ...prevState,
             [playerMove]: prevState[playerMove] - 1
           }))
@@ -215,116 +285,54 @@ function Combat(props) {
         setIsBtnDisabled(false)
       }
       setIsBtnDisabled(false)
-    }, 2000)
+    }, 1500)
   }
-
-  const handleClick = (playerMove) => {
-    setIsBtnDisabled(true)
-    setGameText('...')
-    if(attack.includes(playerMove)){
-      playGame(playerMove)
-    } else if(items.includes(playerMove)){
-      useItem(playerMove)
-    } else (
-      setTimeout(() => {
-        setGameText('Invalid move.')
-        setIsBtnDisabled(false)
-      }, 2000)  
-    )
-  }
-
-  const moveSet = [
-    {
-      icon: ShieldIcon,
-      value: 'Shield',
-      description: 'You hold your shield and stand your ground. Blocks swords and render them useless.',
-      handleClick: handleClick,
-      key: 'shield',
-      isBtnDisabled: isBtnDisabled
-    },
-    {
-      icon: StaffIcon,
-      value: 'Staff',
-      description: 'You raise your staff and cast a strong spell. This blast shields into smitherins.',
-      handleClick: handleClick,
-      key: 'staff',
-      isBtnDisabled: isBtnDisabled
-    },
-    {
-      icon: SwordIcon,
-      value: 'Sword',
-      description: 'You draw your Sword and strike your foe. With your speed, casters are defenseless.',
-      handleClick: handleClick,
-      key: 'sword',
-      isBtnDisabled: isBtnDisabled
-    }
-  ]
-
-  const playerItems = [
-    {
-      icon: PotionIcon,
-      value: 'potion',
-      description: 'Consume a red potion and gain 20 HP back.',
-      handleClick: handleClick,
-      key: 'potion',
-      isBtnDisabled: isBtnDisabled
-    },
-    {
-      icon: BarrierIcon,
-      value: 'barrier',
-      description: 'Cast a barrier on yourself and block the next attack.',
-      handleClick: handleClick,
-      key: 'barrier',
-      isBtnDisabled: isBtnDisabled
-    },
-    {
-      icon: DoubleEdgedSwordIcon,
-      value: 'doubleSword',
-      description: 'Increase damage dealt and receive by 2x for 1 turn.',
-      handleClick: handleClick,
-      key: 'doubleSword',
-      isBtnDisabled: isBtnDisabled
-    }
-  ]
-
-  const renderMoveSet = moveSet.map(value => {
-    return <ActionBox
-      key={value.key}
-      data={value}
-    />
-  })
-
-  const renderPlayerItems = playerItems.map(value => {
-    return <ActionBox
-      key={value.key}
-      data={value}
-      playerItem={props.playerItem}
-    />
-  })
 
   return (
     <div className='min-h-screen w-full flex place-content-center bg-cover bg-center bg-no-repeat font-dotgothic16-regular text-white' style={{ backgroundImage: `url(${BackgroundImage})` }}>
       <div className='max-w-[375px] m-5 p-2 border rounded-md bg-gray-800'>
         <span className='flex items-center'>
           <img src={GoldCoinsIcon} alt='Icon'/>
-          {props.playerGold}
+          {playerGold}
         </span>
         <div className='flex flex-col gap-4 items-center '>
-          <div className='w-full flex justify-between border bg-gray-600 p-2'>
+          <div className='w-full flex justify-between border bg-gray-700 p-2'>
             <p>Player: {<span className='text-red-600'>{playerHealth}</span>}</p>
             <p>Enemy: {<span className='text-red-600'>{enemyHealth}</span>}</p>
           </div>
-          <div className='flex w-full min-h-12 p-2 text-center items-center border bg-gray-600'>
+          <div className='flex w-full min-h-12 p-2 text-center items-center border bg-gray-700'>
             <h1 className='w-full'>{gameText}</h1>
           </div>
           <div className='flex flex-col gap-2'>
-          {activeTab ? renderMoveSet : renderPlayerItems}
-            <div className='flex justify-center gap-2 p-1'>
-              <button className='border px-4 bg-gray-600' onClick={() => setActiveTab(true)}>Attack</button>
-              <button className='border px-4 bg-gray-600' onClick={() => setActiveTab(false)}>Items</button>
-              <button className='border px-4 bg-gray-600' onClick={surrender}>Surrender</button>
+            {activeTab == 'Attack' ? renderMoveSet : renderPlayerItems}
+          </div>
+          <button
+            className='border p-2 bg-gray-700 w-full'
+            onClick={() => setIsOpen(prev => !prev)}
+          >
+            <div className='flex items-center place-content-center justify-between'>
+            {isOpen ? 
+              <>
+                <IoMdArrowDropdown />
+                  <p>{activeTab}</p>
+                <IoMdArrowDropdown />
+              </>
+            :
+              <>
+                <IoMdArrowDropup />
+                  <p>{activeTab}</p>
+                <IoMdArrowDropup />
+              </>
+          }
             </div>
-          </div>        
+          </button>     
+          {isOpen &&
+            <div className='flex flex-col justify-center gap-2 w-full'>
+              <button className='border bg-gray-700 p-2' onClick={() => tabChange('Attack')}>Attack</button>
+              <button className='border bg-gray-700 p-2' onClick={() => tabChange('Items')}>Items</button>
+              <button className='border bg-gray-700 p-2' onClick={surrender}>Surrender</button>
+            </div>  
+          }
         </div>
       </div>
     </div>
