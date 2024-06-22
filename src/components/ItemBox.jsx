@@ -39,7 +39,7 @@ function ItemBox({ data, shopState, playerGold, playerItem, cartTotalPrice, cart
   }
   
   return (
-    <div className='border flex flex-col bg-gray-700 hover:bg-gray-800 mb-auto'>
+    <div className='border flex flex-col bg-gray-700'>
       <div className='relative flex items-start p-1'>
         {location.pathname == '/inventory' && <p className='top-0 left-0 text-[0.6rem]'>{data.quantity}x</p>}
         <div className='flex items-center w-full'>
@@ -57,8 +57,9 @@ function ItemBox({ data, shopState, playerGold, playerItem, cartTotalPrice, cart
       {location.pathname == '/shop' && shopState !== 'off' ?
         shopState == 'buy' ?
           <div className='w-full bg-gray-700 m-0 py-1 px-2 flex justify-center'>
-            <div className='flex items-center justify-between w-3/4 font-dotgothic16-regular text-sm'>
+            <div className='flex items-center justify-between w-3/4 font-dotgothic16-regular'>
               <p> Price: <span className='text-green-500'>{data.buyPrice}</span></p>
+              <p> Owned: {data.quantity}</p>
               <p className='flex gap-2'>
                 Quanitity: {cartItemQuantity[data.value]}
                 <button onClick={() => updateCart('removeItem', 'buy', data.buyPrice, data.value)}>
@@ -73,8 +74,9 @@ function ItemBox({ data, shopState, playerGold, playerItem, cartTotalPrice, cart
           </div>
           :
           <div className='w-full bg-gray-700 m-0 py-1 px-2 flex justify-center'>
-            <div className='flex items-center justify-between w-3/4 font-dotgothic16-regular text-sm'>
+            <div className='flex items-center justify-between w-3/4 font-dotgothic16-regular'>
               <p> Price: <span className='text-red-500'>{data.sellPrice}</span></p>
+              <p> Owned: {data.quantity}</p>
               <p className='flex gap-2'>
                 Quanitity: {`${cartItemQuantity[data.value]}/${playerItem[data.value]}`}
                 <button onClick={() => updateCart('removeItem', 'sell', data.buyPrice, data.value)}>
