@@ -4,6 +4,8 @@ import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
 
 function ItemBox({ data, playerGold, playerItem, cart, setCart}) {
   const location = useLocation()
+  const itemPrice = location.pathname == '/shop' ? data.buyPrice : data.sellPrice
+  const actionType = location.pathname == '/shop' ? 'buy' : 'sell'
 
   const updateQuantity = (type, item) => {
     const newQuantity = (type === 'addItem') ? cart.items[item] + 1 : cart.items[item] - 1
@@ -47,7 +49,7 @@ function ItemBox({ data, playerGold, playerItem, cart, setCart}) {
           }
     }
   }
-  
+
   return (
     <div className='border flex flex-col bg-gray-700'>
       <div className='relative flex items-start p-1'>
@@ -58,45 +60,25 @@ function ItemBox({ data, playerGold, playerItem, cart, setCart}) {
             className='mx-1'
           />
           <div className='text-left font-dotgothic16-regular p-2'>
-            {data.description}
+            <p className='text-lg'>{data.description}</p>
+          </div>
+          <div className='flex flex-col font-dotgothic16-regular'>
+            <button onClick={() => updateCart('addItem', actionType, itemPrice, data.value)}>
+              <IoMdArrowDropup className='h-8 w-8'/>
+            </button>
+            <p>{cart.items[data.value]}</p>
+            <button onClick={() => updateCart('removeItem', actionType, itemPrice, data.value)}>
+              <IoMdArrowDropdown className='h-8 w-8'/>
+            </button> 
           </div>       
         </div>        
       </div>
-      {location.pathname == '/shop' ?
-        <div className='w-full bg-gray-700 m-0 py-1 px-2 flex justify-center'>
-          <div className='flex items-center justify-between w-3/4 font-dotgothic16-regular'>
-            <p> Price: <span className='text-green-500'>{data.buyPrice}</span></p>
-            <p> Owned: {data.quantity}</p>
-            <p className='flex gap-2'>
-              Quanitity: {cart.items[data.value]}
-              <button onClick={() => updateCart('removeItem', 'buy', data.buyPrice, data.value)}>
-                -
-              </button>
-              |
-              <button onClick={() => updateCart('addItem', 'buy', data.buyPrice, data.value)}>
-                +
-              </button>
-            </p>
-          </div>
+      <div className='w-full bg-gray-700 m-0 py-1 px-2 flex justify-center'>
+        <div className='flex items-center place-content-center gap-10 w-3/4 font-dotgothic16-regular'>
+          <p>Price: <span className={`${location.pathname == '/shop' ? 'text-green-500' : 'text-red-500'}`}>{itemPrice}</span></p>
+          <p>Owned: {data.quantity}</p>
         </div>
-        :
-        <div className='w-full bg-gray-700 m-0 py-1 px-2 flex justify-center'>
-          <div className='flex items-center justify-between w-3/4 font-dotgothic16-regular'>
-            <p> Price: <span className='text-red-500'>{data.sellPrice}</span></p>
-            <p> Owned: {data.quantity}</p>
-            <p className='flex gap-2'>
-              Quanitity: {`${cart.items[data.value]}/${playerItem[data.value]}`}
-              <button onClick={() => updateCart('removeItem', 'sell', data.sellPrice, data.value)}>
-                -
-              </button>
-              |
-              <button onClick={() => updateCart('addItem', 'sell', data.sellPrice, data.value)}>
-                +
-              </button>
-            </p>
-          </div>
-        </div>
-      }         
+      </div>
     </div>
   )
 }
