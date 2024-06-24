@@ -66,7 +66,7 @@ function ItemBox({ data, playerGold, playerItem, cart, setCart}) {
             <button onClick={() => updateCart('addItem', actionType, itemPrice, data.value)}>
               <IoMdArrowDropup className='h-8 w-8'/>
             </button>
-            <p>{cart.items[data.value]}</p>
+            <p>{cart.items[data.value]}{location.pathname == '/inventory' && <span>/{data.quantity}</span>}</p>
             <button onClick={() => updateCart('removeItem', actionType, itemPrice, data.value)}>
               <IoMdArrowDropdown className='h-8 w-8'/>
             </button> 
