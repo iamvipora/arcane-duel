@@ -29,7 +29,7 @@ function Inventory({ items, playerGold, playerItem, cart, showCart, isAlertVisib
           />
         </div>
       }
-      <div className='min-h-screen h-ful lw-screen min-w-[375px] flex place-content-center text-white text-lg bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${BackgroundImage})` }}>
+      <div className='min-h-screen h-full w-screen min-w-[375px] flex place-content-center text-white text-lg bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${BackgroundImage})` }}>
         <div className='min-w-[320px] max-w-[800px] flex flex-col my-5 font-press-start text-center'>
           <h1 className='text-3xl'>Inventory</h1>
           <div className='h-full m-5 p-2 border rounded-md bg-gray-800'>
