@@ -63,31 +63,39 @@ function ItemBox({ data, playerGold, playerItem, cart, setCart}) {
   }
 
   return (
-    <div className='border flex flex-col bg-gray-700'>
-      <div className='relative flex items-start p-1'>
-        <div className='flex items-center w-full'>
+    <div className='border flex flex-col bg-gray-700 text-lg p-2'>
+      <div className='relative flex flex-col p-1'>
+        <div className='flex items-center w-full justify-between sm:grid sm:grid-cols-10'>
           <img 
             src={data.icon} 
             alt={data.value}
-            className='mx-1'
+            className='h-14 w-14'
           />
-          <div className='text-left font-dotgothic16-regular p-2'>
-            <p className='text-lg'>{data.description}</p>
+          <div className='text-left font-dotgothic16-regular p-2 sm:col-span-4'>
+            <p>{data.description}</p>
           </div>
-          <div className='flex flex-col font-dotgothic16-regular'>
-            <button onClick={() => updateCart('addItem', actionType, itemPrice, data.value)}>
-              <IoMdArrowDropup className='h-8 w-8'/>
-            </button>
-            <p>{cart.items[data.value]}{location.pathname == '/inventory' && <span>/{data.quantity}</span>}</p>
-            <button onClick={() => updateCart('removeItem', actionType, itemPrice, data.value)}>
-              <IoMdArrowDropdown className='h-8 w-8'/>
-            </button> 
+          <div className='font-dotgothic16-regular hidden sm:block sm:col-span-2'>
+            <p>Price: <span className={`${location.pathname === '/shop' ? 'text-green-500' : 'text-red-500'}`}>{itemPrice}</span></p>
+          </div>
+          <div className='font-dotgothic16-regular hidden sm:block sm:col-span-2'>
+            <p>Owned: {data.quantity}</p>
+          </div>
+          <div className='sm:col-start-10'>
+            <div className='font-dotgothic16-regular'>
+              <button onClick={() => updateCart('addItem', actionType, itemPrice, data.value)}>
+                <IoMdArrowDropup className='h-8 w-8'/>
+              </button>
+              <p>{cart.items[data.value]}{location.pathname === '/inventory' && <span>/{data.quantity}</span>}</p>
+              <button onClick={() => updateCart('removeItem', actionType, itemPrice, data.value)}>
+                <IoMdArrowDropdown className='h-8 w-8'/>
+              </button> 
+            </div>
           </div>       
         </div>        
       </div>
-      <div className='w-full bg-gray-700 m-0 py-1 px-2 flex justify-center'>
+      <div className='w-full bg-gray-700 m-0 py-1 px-2 flex justify-center sm:hidden'>
         <div className='flex items-center place-content-center gap-10 w-3/4 font-dotgothic16-regular'>
-          <p>Price: <span className={`${location.pathname == '/shop' ? 'text-green-500' : 'text-red-500'}`}>{itemPrice}</span></p>
+          <p>Price: <span className={`${location.pathname === '/shop' ? 'text-green-500' : 'text-red-500'}`}>{itemPrice}</span></p>
           <p>Owned: {data.quantity}</p>
         </div>
       </div>
