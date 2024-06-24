@@ -29,18 +29,18 @@ function Inventory({ items, playerGold, playerItem, cart, showCart, isAlertVisib
           />
         </div>
       }
-      <div className='min-h-screen h-ful lw-screen min-w-[375px] flex place-content-center text-white bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${BackgroundImage})` }}>
+      <div className='min-h-screen h-ful lw-screen min-w-[375px] flex place-content-center text-white text-lg bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${BackgroundImage})` }}>
         <div className='min-w-[320px] max-w-[800px] flex flex-col my-5 font-press-start text-center'>
           <h1 className='text-3xl'>Inventory</h1>
           <div className='h-full m-5 p-2 border rounded-md bg-gray-800'>
             <div className='flex justify-between font-dotgothic16-regular '>
               <div className='flex items-center justify-between'>
                 <img src={GoldCoinsIcon} alt='Icon'/>
-                {playerGold}
+                <p>{playerGold}</p>
               </div> 
               <div className='flex items-center gap-2'>
                 <FaShoppingCart 
-                  className='h-6 w-6 cursor-pointer'
+                  className='h-8 w-8 cursor-pointer'
                   onClick={() => {setShowCart(prev => !prev)}}
                 />
                 <p className=''>{cart.totalQuantity}</p>
@@ -49,10 +49,10 @@ function Inventory({ items, playerGold, playerItem, cart, showCart, isAlertVisib
               <div className='flex flex-col gap-3'>
                 {renderItemBox}
               </div>
-              <div className='flex gap-2 font-dotgothic16-regular place-content-center my-4 w-full'>
+              <div className='flex gap-2 my-4 w-full font-dotgothic16-regular place-content-center sm:place-content-end'>
                 <button 
-                  className='border px-4 bg-gray-700 w-1/2 p-1'
-                  value={'sellItems'}
+                  className='border px-4 bg-gray-700 w-40 p-1'
+                  value='sellItems'
                   onClick={(e) => buySell(e.currentTarget.value)}  
                 >
                   <p>Sell</p>
@@ -83,7 +83,7 @@ function Inventory({ items, playerGold, playerItem, cart, showCart, isAlertVisib
             </div>
           <footer>
             <Link to='/'>
-              Back
+              <p className='text-xl'>Back</p>
             </Link>
           </footer>  
         </div> 

@@ -80,8 +80,8 @@ function ItemBox({ data, playerGold, playerItem, cart, setCart}) {
           <div className='font-dotgothic16-regular hidden sm:block sm:col-span-2'>
             <p>Owned: {data.quantity}</p>
           </div>
-          <div className='sm:col-start-10'>
-            <div className='font-dotgothic16-regular'>
+          <div className='sm:col-start-11'>
+            <div className='font-dotgothic16-regular place-items-center flex flex-col'>
               <button onClick={() => updateCart('addItem', actionType, itemPrice, data.value)}>
                 <IoMdArrowDropup className='h-8 w-8'/>
               </button>
