@@ -33,7 +33,7 @@ function Inventory({ items, playerGold, playerItem, cart, showCart, isAlertVisib
         <div className='min-w-[320px] max-w-[800px] flex flex-col my-5 font-press-start text-center'>
           <h1 className='text-3xl'>Inventory</h1>
           <div className='h-full m-5 p-2 border rounded-md bg-gray-800'>
-            <div className='flex justify-between font-dotgothic16-regular '>
+            <div className='flex justify-between font-dotgothic16-regular'>
               <div className='flex items-center justify-between'>
                 <img src={GoldCoinsIcon} alt='Icon'/>
                 <p>{playerGold}</p>
@@ -62,7 +62,7 @@ function Inventory({ items, playerGold, playerItem, cart, showCart, isAlertVisib
                 {cart.totalPrice > 0 && <p className='font-dotgothic16-regular'>{`Total price: ${cart.totalPrice} for ${cart.totalQuantity} items.`}</p>} 
                 {isAlertVisible && <p className={`font-dotgothic16-regular ${fadeClass}`}>{alertMessage}</p>}       
               </div>
-              <div className='flex flex-col gap-2 p-4'>
+              {/* <div className='flex flex-col gap-2 p-4'>
                 <button onClick={()=> {setPlayerItem(prevState => ({
                   potion: prevState.potion + 1,
                   barrier: prevState.barrier + 1,
@@ -79,7 +79,7 @@ function Inventory({ items, playerGold, playerItem, cart, showCart, isAlertVisib
                 <button onClick={() =>{setPlayerGold(0)}}>
                   Reset gold
                 </button>
-              </div>
+              </div> */}
             </div>
           <footer>
             <Link to='/'>

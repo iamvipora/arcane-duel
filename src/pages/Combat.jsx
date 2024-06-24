@@ -23,6 +23,8 @@ function Combat({ items, playerGold, playerItem, setPlayerGold, setPlayerItem })
   const attack = ['Shield', 'Staff', 'Sword']
   const itemName = [items[0].key, items[1].key, items[2].key]
 
+  const arrowDirection = isOpen ? <IoMdArrowDropdown className='h-8 w-8'/> : <IoMdArrowDropup className='h-8 w-8'/>
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -291,50 +293,41 @@ function Combat({ items, playerGold, playerItem, setPlayerGold, setPlayerItem })
   }
 
   return (
-    <div className='min-h-screen w-full flex place-content-center bg-cover bg-center bg-no-repeat font-dotgothic16-regular text-white' style={{ backgroundImage: `url(${BackgroundImage})` }}>
-      <div className='max-w-[375px] m-5 p-2 border rounded-md bg-gray-800'>
-        <span className='flex items-center'>
-          <img src={GoldCoinsIcon} alt='Icon'/>
-          {playerGold}
-        </span>
-        <div className='flex flex-col gap-4 items-center '>
-          <div className='w-full flex justify-between border bg-gray-700 p-2'>
-            <p>Player: {<span className='text-red-600'>{playerHealth}</span>}</p>
-            <p>Enemy: {<span className='text-red-600'>{enemyHealth}</span>}</p>
-          </div>
-          <div className='flex w-full min-h-12 p-2 text-center items-center border bg-gray-700'>
-            <h1 className='w-full'>{gameText}</h1>
-          </div>
-          <div className='flex flex-col gap-2'>
-            {activeTab == 'Attack' ? renderMoveSet : renderPlayerItems}
-          </div>
-          <button
-            className='border p-2 bg-gray-700 w-full'
-            onClick={() => setIsOpen(prev => !prev)}
-          >
-            <div className='flex items-center place-content-center justify-between'>
-            {isOpen ? 
-              <>
-                <IoMdArrowDropdown />
-                  <p>{activeTab}</p>
-                <IoMdArrowDropdown />
-              </>
-            :
-              <>
-                <IoMdArrowDropup />
-                  <p>{activeTab}</p>
-                <IoMdArrowDropup />
-              </>
-          }
+    <div className='min-h-screen h-full w-screen min-w-[375px] flex place-content-center text-white text-lg font-dotgothic16-regular bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${BackgroundImage})` }}>
+      <div className='min-w-[320px] max-w-[800px] flex flex-col my-5 text-center'>
+        <h1 className='text-3xl font-press-start'>Combat</h1>
+        <div className='h-full min-w-[320px] max-w-[800px] m-5 p-2 border rounded-md bg-gray-800'>
+          <span className='flex items-center'>
+            <img src={GoldCoinsIcon} alt='Icon'/>
+            {playerGold}
+          </span>
+          <div className='flex flex-col gap-4 items-center '>
+            <div className='w-full flex justify-between border bg-gray-700 p-2'>
+              <p>Player: {<span className='text-red-600'>{playerHealth}</span>}</p>
+              <p>Enemy: {<span className='text-red-600'>{enemyHealth}</span>}</p>
             </div>
-          </button>     
-          {isOpen &&
-            <div className='flex flex-col justify-center gap-2 w-full'>
+            <div className='flex w-full min-h-12 p-2 text-center items-center border bg-gray-700'>
+              <h1 className='w-full'>{gameText}</h1>
+            </div>
+            <div className='flex flex-col gap-2'>
+              {activeTab == 'Attack' ? renderMoveSet : renderPlayerItems}
+            </div>
+            <button
+              className='border p-2 bg-gray-700 w-full sm:hidden'
+              onClick={() => setIsOpen(prev => !prev)}
+            >
+              <div className='flex items-center place-content-center justify-between'>
+                {arrowDirection}
+                  <p>{activeTab}</p>
+                {arrowDirection}
+              </div>
+            </button>     
+            <div className={`flex flex-col justify-center gap-2 w-full ${isOpen ? '' : 'hidden'} sm:grid sm:grid-cols-3`}>
               <button className='border bg-gray-700 p-2' onClick={() => tabChange('Attack')}>Attack</button>
               <button className='border bg-gray-700 p-2' onClick={() => tabChange('Items')}>Items</button>
               <button className='border bg-gray-700 p-2' onClick={surrender}>Surrender</button>
-            </div>  
-          }
+            </div>
+          </div>
         </div>
       </div>
     </div>

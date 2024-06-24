@@ -66,11 +66,7 @@ function ItemBox({ data, playerGold, playerItem, cart, setCart}) {
     <div className='border flex flex-col bg-gray-700 text-lg p-2'>
       <div className='relative flex flex-col p-1'>
         <div className='flex items-center w-full justify-between sm:grid sm:grid-cols-10'>
-          <img 
-            src={data.icon} 
-            alt={data.value}
-            className='h-14 w-14'
-          />
+          <img src={data.icon} alt={data.value} className='h-14 w-14'/>
           <div className='text-left font-dotgothic16-regular p-2 sm:col-span-4'>
             <p>{data.description}</p>
           </div>
