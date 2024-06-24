@@ -1,83 +1,94 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import ItemBox from '../components/ItemBox'
+import ShoppingCart from '../components/ShoppingCart'
 import BackgroundImage from '/images/background.jpg'
-import PotionIcon from '/images/potion.png'
-import DoubleEdgedSwordIcon from '/images/2-sword.png'
-import BarrierIcon from '/images/barrier.png'
 import GoldCoinsIcon from '/images/gold-coins.png'
 
-function Inventory(props) {
-
-  const items = [
-    {
-      icon: PotionIcon,
-      value: 'Potion',
-      description: 'Consume a red potion and gain 20 HP back.',
-      quantity: props.playerItem.potion,
-      key: 'potion'
-    },
-    {
-      icon: BarrierIcon,
-      value: 'Barrier',
-      description: 'Cast a barrier on yourself and block the next attack.',
-      quantity: props.playerItem.barrier,
-      key: 'barrier'
-    },
-    {
-      icon: DoubleEdgedSwordIcon,
-      value: 'Double-Edged Sword',
-      description: 'Increase damage dealt and receive by 2x for 1 turn.',
-      quantity: props.playerItem.doubleSword,
-      key: 'double-edged sword'
-    }
-  ]
-
-  const renderItemBox = items.map((value) => {
+function Inventory({ items, playerGold, playerItem, cart, showCart, isAlertVisible, alertMessage, fadeClass, setPlayerGold, setPlayerItem, setCart, setShowCart, buySell, FaShoppingCart }) {
+  const renderItemBox = items.map((data) => {
     return <ItemBox
-    key={value.key}
-    data={value}
-  />
+      key={data.key}
+      data={data}
+      playerGold={playerGold}
+      playerItem={playerItem}  
+      cart={cart}
+      setCart={setCart}
+    />
   })
 
   return (
-    <div className='min-h-screen h-full w-screen flex place-content-center text-white bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${BackgroundImage})` }}>
-      <div className='flex flex-col max-w-[375px] my-5 font-press-start text-center'>
-        <h1 className='text-3xl'>Inventory</h1>       
+    <>
+      {showCart && 
+        <div className='flex h-screen w-screen backdrop-blur-sm fixed z-10 items-center place-content-center'>
+          <ShoppingCart
+            items={items}
+            cart={cart}
+            setCart={setCart}
+            setShowCart={setShowCart}
+          />
+        </div>
+      }
+      <div className='min-h-screen h-ful lw-screen min-w-[375px] flex place-content-center text-white bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${BackgroundImage})` }}>
+        <div className='min-w-[320px] max-w-[800px] flex flex-col my-5 font-press-start text-center'>
+          <h1 className='text-3xl'>Inventory</h1>
           <div className='h-full m-5 p-2 border rounded-md bg-gray-800'>
-            <span className='flex items-center font-dotgothic16-regular'>
-              <img src={GoldCoinsIcon} alt='Icon'/>
-              {props.playerGold}
-            </span>
-            <div className='flex flex-col gap-3'>
-              {renderItemBox}
+            <div className='flex justify-between font-dotgothic16-regular '>
+              <div className='flex items-center justify-between'>
+                <img src={GoldCoinsIcon} alt='Icon'/>
+                {playerGold}
+              </div> 
+              <div className='flex items-center gap-2'>
+                <FaShoppingCart 
+                  className='h-6 w-6 cursor-pointer'
+                  onClick={() => {setShowCart(prev => !prev)}}
+                />
+                <p className=''>{cart.totalQuantity}</p>
+              </div>
             </div>
-            <div className='flex flex-col gap-2 p-4'>
-              <button onClick={()=> {props.setPlayerItem(prevState => ({
-                potion: prevState.potion + 1,
-                barrier: prevState.barrier + 1,
-                doubleSword: prevState.doubleSword + 1
-              }))}}>
-                Add supplies
-              </button>
-              <button onClick={() =>{props.setPlayerItem({potion: 0, barrier: 0, doubleSword: 0})}}>
-                Reset supplies
-              </button>
-              <button onClick={() =>{props.setPlayerGold(prevState => prevState + 1000)}}>
-                Add gold
-              </button>
-              <button onClick={() =>{props.setPlayerGold(0)}}>
-                Reset gold
-              </button>
+              <div className='flex flex-col gap-3'>
+                {renderItemBox}
+              </div>
+              <div className='flex gap-2 font-dotgothic16-regular place-content-center my-4 w-full'>
+                <button 
+                  className='border px-4 bg-gray-700 w-1/2 p-1'
+                  value={'sellItems'}
+                  onClick={(e) => buySell(e.currentTarget.value)}  
+                >
+                  <p>Sell</p>
+                </button>
+              </div>
+              <div className='flex flex-col gap-2'>
+                {cart.totalPrice > 0 && <p className='font-dotgothic16-regular'>{`Total price: ${cart.totalPrice} for ${cart.totalQuantity} items.`}</p>} 
+                {isAlertVisible && <p className={`font-dotgothic16-regular ${fadeClass}`}>{alertMessage}</p>}       
+              </div>
+              <div className='flex flex-col gap-2 p-4'>
+                <button onClick={()=> {setPlayerItem(prevState => ({
+                  potion: prevState.potion + 1,
+                  barrier: prevState.barrier + 1,
+                  doubleSword: prevState.doubleSword + 1
+                }))}}>
+                  Add supplies
+                </button>
+                <button onClick={() =>{setPlayerItem({potion: 0, barrier: 0, doubleSword: 0})}}>
+                  Reset supplies
+                </button>
+                <button onClick={() =>{setPlayerGold(prevState => prevState + 1000)}}>
+                  Add gold
+                </button>
+                <button onClick={() =>{setPlayerGold(0)}}>
+                  Reset gold
+                </button>
+              </div>
             </div>
-          </div>
-        <footer>
-          <Link to='/'>
-            Back
-          </Link>
-        </footer>  
-      </div> 
-    </div>
+          <footer>
+            <Link to='/'>
+              Back
+            </Link>
+          </footer>  
+        </div> 
+      </div>
+    </>
   )
 }
 
