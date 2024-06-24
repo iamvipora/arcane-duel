@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
 
@@ -6,6 +6,18 @@ function ItemBox({ data, playerGold, playerItem, cart, setCart}) {
   const location = useLocation()
   const itemPrice = location.pathname == '/shop' ? data.buyPrice : data.sellPrice
   const actionType = location.pathname == '/shop' ? 'buy' : 'sell'
+
+  useEffect(() => {
+    setCart({
+      items: {
+        potion: 0,
+        barrier: 0,
+        doubleSword: 0
+      },
+      totalQuantity: 0,
+      totalPrice: 0
+    })
+  }, [])
 
   const updateQuantity = (type, item) => {
     const newQuantity = (type === 'addItem') ? cart.items[item] + 1 : cart.items[item] - 1
