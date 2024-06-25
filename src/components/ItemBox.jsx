@@ -2,13 +2,13 @@ import React, { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
 
-function ItemBox({ data, playerGold, playerItem, cart, setCart}) {
+function ItemBox({ data, playerGold, playerItem, cart, setCart, tempCart, setTempCart, setAlertMessage}) {
   const location = useLocation()
   const itemPrice = location.pathname == '/shop' ? data.buyPrice : data.sellPrice
   const actionType = location.pathname == '/shop' ? 'buy' : 'sell'
 
   useEffect(() => {
-    setCart({
+    setTempCart({
       items: {
         potion: 0,
         barrier: 0,
@@ -20,8 +20,8 @@ function ItemBox({ data, playerGold, playerItem, cart, setCart}) {
   }, [])
 
   const updateQuantity = (type, item) => {
-    const newQuantity = (type === 'addItem') ? cart.items[item] + 1 : cart.items[item] - 1
-    setCart(prevState => ({
+    const newQuantity = (type === 'addItem') ? tempCart.items[item] + 1 : tempCart.items[item] - 1
+    setTempCart(prevState => ({
       ...prevState,
       items: {
         ...prevState.items,
@@ -31,31 +31,33 @@ function ItemBox({ data, playerGold, playerItem, cart, setCart}) {
   }
 
   const updatePrice = (price) => {
-    const newtotalPrice = cart.totalPrice + price
-    setCart(prevState => ({
+    const newtotalPrice = tempCart.totalPrice + price
+    setTempCart(prevState => ({
       ...prevState,
       totalPrice: newtotalPrice
     }))
   }
 
-  const updateCart = (type, action, price, item) => {
+  const updateTempCart = (type, action, price, item) => {
     if(action == 'buy'){
       if(type == 'addItem'){
-        if(cart.totalPrice + price <= playerGold){
+        if(tempCart.totalPrice + price <= playerGold){
             updatePrice(price)
             updateQuantity(type, item)
+          }else{
+            setAlertMessage('Not enough gold.')
           }
-        } else if(type == 'removeItem' && cart.items[item] > 0){
+        } else if(type == 'removeItem' && tempCart.items[item] > 0){
             updatePrice(-price)
             updateQuantity(type, item)
           }
     } else if(action == 'sell'){
       if(type == 'addItem'){
-        if(cart.items[item] + 1 <= playerItem[item]){
+        if(tempCart.items[item] + 1 <= playerItem[item]){
             updatePrice(price)
             updateQuantity(type, item)
           }
-        } else if(type == 'removeItem' && cart.items[item] > 0){
+        } else if(type == 'removeItem' && tempCart.items[item] > 0){
             updatePrice(-price)
             updateQuantity(type, item)
           }
@@ -78,11 +80,11 @@ function ItemBox({ data, playerGold, playerItem, cart, setCart}) {
           </div>
           <div className='sm:col-start-11'>
             <div className='font-dotgothic16-regular place-items-center flex flex-col'>
-              <button onClick={() => updateCart('addItem', actionType, itemPrice, data.value)}>
+              <button onClick={() => updateTempCart('addItem', actionType, itemPrice, data.value)}>
                 <IoMdArrowDropup className='h-8 w-8'/>
               </button>
-              <p>{cart.items[data.value]}{location.pathname === '/inventory' && <span>/{data.quantity}</span>}</p>
-              <button onClick={() => updateCart('removeItem', actionType, itemPrice, data.value)}>
+              <p>{tempCart.items[data.value]}{location.pathname === '/inventory' && <span>/{data.quantity}</span>}</p>
+              <button onClick={() => updateTempCart('removeItem', actionType, itemPrice, data.value)}>
                 <IoMdArrowDropdown className='h-8 w-8'/>
               </button> 
             </div>

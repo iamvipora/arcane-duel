@@ -5,7 +5,7 @@ import ShoppingCart from '../components/ShoppingCart'
 import BackgroundImage from '/images/background.jpg'
 import GoldCoinsIcon from '/images/gold-coins.png'
 
-function Inventory({ items, playerGold, playerItem, cart, showCart, isAlertVisible, alertMessage, fadeClass, setPlayerGold, setPlayerItem, setCart, setShowCart, buySell, FaShoppingCart }) {
+function Inventory({ items, playerGold, playerItem, cart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setPlayerGold, setPlayerItem, setCart, setTempCart, setShowCart, setAlertMessage, buySell, addToCart, FaShoppingCart }) {
   const renderItemBox = items.map((data) => {
     return <ItemBox
       key={data.key}
@@ -13,7 +13,10 @@ function Inventory({ items, playerGold, playerItem, cart, showCart, isAlertVisib
       playerGold={playerGold}
       playerItem={playerItem}  
       cart={cart}
+      tempCart={tempCart}
       setCart={setCart}
+      setTempCart={setTempCart}
+      setAlertMessage={setAlertMessage}
     />
   })
 
@@ -24,8 +27,10 @@ function Inventory({ items, playerGold, playerItem, cart, showCart, isAlertVisib
           <ShoppingCart
             items={items}
             cart={cart}
-            setCart={setCart}
+            setCart={cart}
+            showCart={showCart}
             setShowCart={setShowCart}
+            buySell={buySell}
           />
         </div>
       }
@@ -41,7 +46,7 @@ function Inventory({ items, playerGold, playerItem, cart, showCart, isAlertVisib
               <div className='flex items-center gap-2'>
                 <FaShoppingCart 
                   className='h-8 w-8 cursor-pointer'
-                  onClick={() => {setShowCart(prev => !prev)}}
+                  onClick={() => {setShowCart(prevState => !prevState)}}
                 />
                 <p className=''>{cart.totalQuantity}</p>
               </div>
@@ -52,17 +57,15 @@ function Inventory({ items, playerGold, playerItem, cart, showCart, isAlertVisib
               <div className='flex gap-2 my-4 w-full font-dotgothic16-regular place-content-center sm:place-content-end'>
                 <button 
                   className='border px-4 bg-gray-700 w-40 p-1'
-                  value='sellItems'
-                  onClick={(e) => buySell(e.currentTarget.value)}  
+                  onClick={addToCart}  
                 >
-                  <p>Sell</p>
+                  <p>Add to cart</p>
                 </button>
               </div>
               <div className='flex flex-col gap-2'>
-                {cart.totalPrice > 0 && <p className='font-dotgothic16-regular'>{`Total price: ${cart.totalPrice} for ${cart.totalQuantity} items.`}</p>} 
                 {isAlertVisible && <p className={`font-dotgothic16-regular ${fadeClass}`}>{alertMessage}</p>}       
               </div>
-              {/* <div className='flex flex-col gap-2 p-4'>
+              <div className='flex flex-col gap-2 p-4'>
                 <button onClick={()=> {setPlayerItem(prevState => ({
                   potion: prevState.potion + 1,
                   barrier: prevState.barrier + 1,
@@ -79,7 +82,7 @@ function Inventory({ items, playerGold, playerItem, cart, showCart, isAlertVisib
                 <button onClick={() =>{setPlayerGold(0)}}>
                   Reset gold
                 </button>
-              </div> */}
+              </div>
             </div>
           <footer>
             <Link to='/'>

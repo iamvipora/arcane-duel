@@ -5,8 +5,7 @@ import ShoppingCart from '../components/ShoppingCart'
 import BackgroundImage from '/images/background.jpg'
 import GoldCoinsIcon from '/images/gold-coins.png'
 
-function Shop({ items, playerGold, playerItem, cart, showCart, isAlertVisible, alertMessage, fadeClass, setCart, setShowCart, buySell, FaShoppingCart }) {
-
+function Shop({ items, playerGold, playerItem, cart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setCart, setTempCart, setShowCart, setAlertMessage, buySell, addToCart, FaShoppingCart }) {
   const renderItemBox = items.map((data) => {
     return <ItemBox
       key={data.key}
@@ -14,7 +13,10 @@ function Shop({ items, playerGold, playerItem, cart, showCart, isAlertVisible, a
       playerGold={playerGold}
       playerItem={playerItem}  
       cart={cart}
+      tempCart={tempCart}
       setCart={setCart}
+      setTempCart={setTempCart}
+      setAlertMessage={setAlertMessage}
     />
   })
   
@@ -28,6 +30,7 @@ function Shop({ items, playerGold, playerItem, cart, showCart, isAlertVisible, a
             setCart={cart}
             showCart={showCart}
             setShowCart={setShowCart}
+            buySell={buySell}
           />
         </div>
       }
@@ -43,7 +46,7 @@ function Shop({ items, playerGold, playerItem, cart, showCart, isAlertVisible, a
               <div className='flex items-center gap-2'>
                 <FaShoppingCart 
                   className='h-8 w-8 cursor-pointer'
-                  onClick={() => {setShowCart(prev => !prev)}}
+                  onClick={() => {setShowCart(prevState => !prevState)}}
                 />
                 <p>{cart.totalQuantity}</p>
               </div> 
@@ -54,14 +57,12 @@ function Shop({ items, playerGold, playerItem, cart, showCart, isAlertVisible, a
             <div className='flex gap-2 my-4 w-full font-dotgothic16-regular place-content-center sm:place-content-end'>
               <button 
                 className='border px-4 bg-gray-700 w-40 p-1'
-                value='buyItems'
-                onClick={(e) => buySell(e.currentTarget.value)}  
+                onClick={addToCart} 
               >
-                <p>Buy</p>
+                <p>Add to cart</p>
               </button>
             </div>
             <div className='flex flex-col gap-2'>
-              {cart.totalPrice > 0 && <p className='font-dotgothic16-regular'>{`Total price: ${cart.totalPrice} for ${cart.totalQuantity} items.`}</p>} 
               {isAlertVisible && <p className={`font-dotgothic16-regular ${fadeClass}`}>{alertMessage}</p>}       
             </div>
           </div>

@@ -13,6 +13,15 @@ import { FaShoppingCart } from "react-icons/fa"
 function App() {
   const [playerGold, setPlayerGold] = useState(JSON.parse(localStorage.getItem('playerGold')) || 1000)
   const [playerItem, setPlayerItem] = useState(JSON.parse(localStorage.getItem('playerItem')) || {potion: 0, barrier: 0, doubleSword: 0})
+  const [tempCart, setTempCart] = useState({
+    items: {
+      potion: 0,
+      barrier: 0,
+      doubleSword: 0
+    },
+    totalQuantity: 0,
+    totalPrice: 0
+  })
   const [cart, setCart] = useState({
     items: {
       potion: 0,
@@ -38,12 +47,12 @@ function App() {
   }, [playerItem])
 
   useEffect(() => {
-    let newTotalQuantity = cart.items.potion + cart.items.barrier + cart.items.doubleSword
-    setCart(prevState => ({
+    let newTotalQuantity = tempCart.items.potion + tempCart.items.barrier + tempCart.items.doubleSword
+    setTempCart(prevState => ({
       ...prevState,
       totalQuantity: newTotalQuantity
     }))
-  }, [cart.items])
+  }, [tempCart.items])
 
   useEffect(() => {
     setIsAlertVisible(true)
@@ -60,8 +69,8 @@ function App() {
     return () => clearTimeout(timer);
   }, [alertMessage])
 
-  const clearCart = () => {
-    setCart({items: {
+  const clearTempCart = () => {
+    setTempCart({items: {
         potion: 0,
         barrier: 0,
         doubleSword: 0
@@ -69,6 +78,31 @@ function App() {
       totalQuantity: 0,
       totalPrice: 0
     })
+  }
+
+  const clearCart = () =>{
+    setCart({items: {
+      potion: 0,
+      barrier: 0,
+      doubleSword: 0
+    },
+    totalQuantity: 0,
+    totalPrice: 0
+  })
+  }
+
+  const addToCart = () => {
+    setAlertMessage(`Added ${tempCart.totalQuantity} items to cart.`)
+    setCart(prevState => ({
+      items: {
+        potion: prevState.items.potion + tempCart.items.potion,
+        barrier: prevState.items.barrier + tempCart.items.barrier,
+        doubleSword: prevState.items.doubleSword + tempCart.items.doubleSword,
+      },
+      totalQuantity: prevState.totalQuantity + tempCart.totalQuantity,
+      totalPrice: prevState.totalPrice + tempCart.totalPrice,
+    }))
+    clearTempCart()
   }
 
   const buySell = (action) => {
@@ -85,6 +119,8 @@ function App() {
       } else{
         setAlertMessage('There were no items on the cart.')
       }
+      setShowCart(prevState => !prevState)
+      clearTempCart()
       clearCart()
     } else if(action == 'sellItems'){
       if(cart.totalQuantity){
@@ -99,6 +135,8 @@ function App() {
       } else{
         setAlertMessage('There were no items on the cart.')
       }
+      setShowCart(prevState => !prevState)
+      clearTempCart()
       clearCart()
     }
   }
@@ -143,12 +181,16 @@ function App() {
 
   const buySellProps = {
     cart,
+    tempCart,
     showCart, 
     isAlertVisible, 
     alertMessage, 
     fadeClass, 
     setCart,
-    setShowCart, 
+    setTempCart,
+    setShowCart,
+    setAlertMessage,
+    addToCart, 
     buySell,
     FaShoppingCart
   }

@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom'
 
-const ShoppingCart = ({ items, cart, setShowCart }) => {
+const ShoppingCart = ({ items, cart, setShowCart, buySell }) => {
   const location = useLocation()
 
   const cartItem = items.map((item) => ({
@@ -9,21 +9,19 @@ const ShoppingCart = ({ items, cart, setShowCart }) => {
   }))
 
   const renderCartItem = cartItem.map((item) => {
+    const itemPrice = location.pathname == '/shop' ? <span className='text-green-500'>{item.buyPrice}</span> : <span className='text-red-500'>{item.sellPrice}</span>
+
     return (
       <>
         {cart.items[item.key] ?
           <div className='p-2 flex bg-gray-700 border gap-4'>
             <img src={item.icon} alt="" />
-            {location.pathname == '/shop' ?
-              <p>Price: <br/><span className='text-green-500'>{item.buyPrice}</span></p>
-              :
-              <p>Price: <br/><span className='text-red-500'>{item.sellPrice}</span></p>
-            }
+              <p>Price: <br/>{itemPrice}</p>
             <p>Owned: <br/>{item.quantity}</p>
             <p>Quantity: <br/>{cart.items[item.key]}</p>    
           </div>
         :
-          null
+          ''
         }
     </>
     )
@@ -41,7 +39,14 @@ const ShoppingCart = ({ items, cart, setShowCart }) => {
         'Shopping cart is empty'
         }
       <div>
-        <p>Total: {cart.totalPrice}</p>
+        {cart.totalPrice > 0 && <p className='font-dotgothic16-regular'>{`Total price: ${cart.totalPrice} for ${cart.totalQuantity} items.`}</p>}
+        <button 
+          className='border px-4 bg-gray-700 w-40 p-1'
+          value={location.pathname == '/shop' ? 'buyItems' : 'sellItems'}
+          onClick={(e) => buySell(e.currentTarget.value)}  
+        >
+          <p>{location.pathname == '/shop' ? 'Buy' : 'Sell'}</p>
+        </button>
       </div>
       <button 
         className='font-press-start'
