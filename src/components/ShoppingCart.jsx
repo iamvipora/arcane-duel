@@ -13,25 +13,19 @@ const ShoppingCart = ({ items, sellCart, buyCart, setShowCart, buySell }) => {
     const itemPrice = location.pathname == '/shop' ? <span className='text-green-500'>{item.buyPrice}</span> : <span className='text-red-500'>{item.sellPrice}</span>
     
     return (
-      <>
-        {whichCart.items[item.key] ?
-          <div className='p-2 flex bg-gray-700 border gap-4'>
-            <img src={item.icon} alt="" />
-              <p>Price: <br/>{itemPrice}</p>
-            <p>Owned: <br/>{item.quantity}</p>
-            <p>Quantity: <br/>{whichCart.items[item.key]}</p>    
-          </div>
-        :
-          ''
-        }
-    </>
+      whichCart.items[item.value] && (
+        <div key={item.value} className='p-2 flex bg-gray-700 border gap-4'>
+          <img src={item.icon} alt="" />
+          <p>Price: <br/>{itemPrice}</p>
+          <p>Owned: <br/>{item.quantity}</p>
+          <p>Quantity: <br/>{whichCart.items[item.value]}</p>    
+        </div>
+      )
     )
   })
 
   return (
-    // Fix add unique key per prop error
-    <div className='flex flex-col font-dotgothic16-regular text-center text-white border bg-gray-800 p-2 h-96 justify-between rounded-md'>
-      <h1 className='font-press-start'>Shopping Cart</h1>
+    <div className='h-full w-full min-w-[325px] flex flex-col font-dotgothic16-regular text-center text-white border bg-gray-800 p-2 m-5 lg:m-0 justify-between rounded-md'>
       {whichCart.totalQuantity ? 
         <div className='flex flex-col gap-2 w-full'>
           {renderCartItem}
@@ -49,12 +43,6 @@ const ShoppingCart = ({ items, sellCart, buyCart, setShowCart, buySell }) => {
           <p>{location.pathname == '/shop' ? 'Buy' : 'Sell'}</p>
         </button>
       </div>
-      <button 
-        className='font-press-start'
-        onClick={() => setShowCart(prev => !prev)}
-      >
-        Back  
-      </button> 
     </div>
   )
 }
