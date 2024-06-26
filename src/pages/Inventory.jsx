@@ -5,16 +5,16 @@ import ShoppingCart from '../components/ShoppingCart'
 import BackgroundImage from '/images/background.jpg'
 import GoldCoinsIcon from '/images/gold-coins.png'
 
-function Inventory({ items, playerGold, playerItem, cart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setPlayerGold, setPlayerItem, setCart, setTempCart, setShowCart, setAlertMessage, buySell, addToCart, FaShoppingCart }) {
+function Inventory({ items, playerGold, playerItem, sellCart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setPlayerGold, setPlayerItem, setSellCart, setTempCart, setShowCart, setAlertMessage, buySell, addToCart, FaShoppingCart }) {
   const renderItemBox = items.map((data) => {
     return <ItemBox
       key={data.key}
       data={data}
       playerGold={playerGold}
       playerItem={playerItem}  
-      cart={cart}
+      sellCart={sellCart}
       tempCart={tempCart}
-      setCart={setCart}
+      setSellCart={setSellCart}
       setTempCart={setTempCart}
       setAlertMessage={setAlertMessage}
     />
@@ -26,9 +26,9 @@ function Inventory({ items, playerGold, playerItem, cart, tempCart, showCart, is
         <div className='flex h-screen w-screen backdrop-blur-sm fixed z-10 items-center place-content-center'>
           <ShoppingCart
             items={items}
-            cart={cart}
-            setCart={cart}
+            sellCart={sellCart}
             showCart={showCart}
+            setSellCart={setSellCart}
             setShowCart={setShowCart}
             buySell={buySell}
           />
@@ -48,7 +48,7 @@ function Inventory({ items, playerGold, playerItem, cart, tempCart, showCart, is
                   className='h-8 w-8 cursor-pointer'
                   onClick={() => {setShowCart(prevState => !prevState)}}
                 />
-                <p className=''>{cart.totalQuantity}</p>
+                <p className=''>{sellCart.totalQuantity}</p>
               </div>
             </div>
               <div className='flex flex-col gap-3'>
@@ -57,7 +57,7 @@ function Inventory({ items, playerGold, playerItem, cart, tempCart, showCart, is
               <div className='flex gap-2 my-4 w-full font-dotgothic16-regular place-content-center sm:place-content-end'>
                 <button 
                   className='border px-4 bg-gray-700 w-40 p-1'
-                  onClick={addToCart}  
+                  onClick={() => addToCart('sell')}  
                 >
                   <p>Add to cart</p>
                 </button>

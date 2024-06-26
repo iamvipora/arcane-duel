@@ -313,7 +313,7 @@ function Combat({ items, playerGold, playerItem, setPlayerGold, setPlayerItem })
               {activeTab == 'Attack' ? renderMoveSet : renderPlayerItems}
             </div>
             <button
-              className='border p-2 bg-gray-700 w-full sm:hidden'
+              className='border p-1 bg-gray-700 w-full sm:hidden'
               onClick={() => setIsOpen(prev => !prev)}
             >
               <div className='flex items-center place-content-center justify-between'>
@@ -323,9 +323,9 @@ function Combat({ items, playerGold, playerItem, setPlayerGold, setPlayerItem })
               </div>
             </button>     
             <div className={`flex flex-col justify-center gap-2 w-full ${isOpen ? '' : 'hidden'} sm:grid sm:grid-cols-3`}>
-              <button className='border bg-gray-700 p-2' onClick={() => tabChange('Attack')}>Attack</button>
-              <button className='border bg-gray-700 p-2' onClick={() => tabChange('Items')}>Items</button>
-              <button className='border bg-gray-700 p-2' onClick={surrender}>Surrender</button>
+              <button className='border bg-gray-700 p-1' onClick={() => tabChange('Attack')}>Attack</button>
+              <button className='border bg-gray-700 p-1' onClick={() => tabChange('Items')}>Items</button>
+              <button className='border bg-gray-700 p-1' onClick={surrender}>Surrender</button>
             </div>
           </div>
         </div>
