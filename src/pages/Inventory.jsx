@@ -5,13 +5,12 @@ import ShoppingCart from '../components/ShoppingCart'
 import BackgroundImage from '/images/background.jpg'
 import GoldCoinsIcon from '/images/gold-coins.png'
 
-function Inventory({ items, playerGold, playerItem, sellCart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setPlayerGold, setPlayerItem, setSellCart, setTempCart, setShowCart, setAlertMessage, buySell, addToCart, FaShoppingCart }) {
+function Inventory({ items, playerGold, sellCart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setPlayerGold, setPlayerItem, setSellCart, setTempCart, setShowCart, setAlertMessage, checkOut, addToCart, FaShoppingCart }) {
   const renderItemBox = items.map((data) => {
     return <ItemBox
       key={data.key}
       data={data}
       playerGold={playerGold}
-      playerItem={playerItem}  
       sellCart={sellCart}
       tempCart={tempCart}
       setSellCart={setSellCart}
@@ -20,6 +19,10 @@ function Inventory({ items, playerGold, playerItem, sellCart, tempCart, showCart
     />
   })
 
+  const sellCartTotalQuantity = sellCart.reduce((quantity, item) => {
+    return quantity + item.quantity
+  }, 0)
+
   return (
     <>
       {showCart && 
@@ -27,10 +30,10 @@ function Inventory({ items, playerGold, playerItem, sellCart, tempCart, showCart
           <h1 className='font-press-start text-3xl'>Cart</h1>
           <ShoppingCart
             items={items}
-            sellCart={sellCart}    
+            sellCart={sellCart}
             showCart={showCart}
             setSellCart={setSellCart}
-            buySell={buySell}
+            checkOut={checkOut}
           />
           <button 
             className='font-press-start'
@@ -55,7 +58,7 @@ function Inventory({ items, playerGold, playerItem, sellCart, tempCart, showCart
                     className='h-8 w-8 cursor-pointer'
                     onClick={() => {setShowCart(prevState => !prevState)}}
                   />
-                  <p>{sellCart.totalQuantity}</p>
+                  <p>{sellCartTotalQuantity}</p>
                 </div> 
               </div>
               <div className='flex flex-col gap-3'>
@@ -63,7 +66,7 @@ function Inventory({ items, playerGold, playerItem, sellCart, tempCart, showCart
               </div>
               <div className='flex gap-2 my-4 w-full font-dotgothic16-regular place-content-center sm:place-content-end'>
                 <button 
-                  className='border px-4 bg-gray-700 w-40 p-1'
+                  className='w-40 border py-1 bg-gray-700'
                   onClick={() => addToCart('sell')} 
                 >
                   <p>Add to cart</p>
@@ -95,10 +98,10 @@ function Inventory({ items, playerGold, playerItem, sellCart, tempCart, showCart
             <div className='ml-2 hidden lg:block'>
               <ShoppingCart
                 items={items}
-                sellCart={sellCart}    
+                sellCart={sellCart}
                 showCart={showCart}
                 setSellCart={setSellCart}
-                buySell={buySell}
+                checkOut={checkOut}
               />
             </div>
           </div>

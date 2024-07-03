@@ -96,6 +96,7 @@ function Combat({ items, playerGold, playerItem, setPlayerGold, setPlayerItem })
       key={data.key}
       data={data}
       itemName={itemName}
+      items={items}
     />
   })
 
@@ -104,7 +105,7 @@ function Combat({ items, playerGold, playerItem, setPlayerGold, setPlayerItem })
       key={data.key}
       data={data}
       itemName={itemName}
-      playerItem={playerItem}
+      items={items}
     />
   })
 
@@ -323,9 +324,9 @@ function Combat({ items, playerGold, playerItem, setPlayerGold, setPlayerItem })
               </div>
             </button>     
             <div className={`flex flex-col justify-center gap-2 w-full ${isOpen ? '' : 'hidden'} sm:grid sm:grid-cols-3`}>
-              <button className='border bg-gray-700 p-1' onClick={() => tabChange('Attack')}>Attack</button>
-              <button className='border bg-gray-700 p-1' onClick={() => tabChange('Items')}>Items</button>
-              <button className='border bg-gray-700 p-1' onClick={surrender}>Surrender</button>
+              <button className='border bg-gray-700 py-1' onClick={() => tabChange('Attack')}>Attack</button>
+              <button className='border bg-gray-700 py-1' onClick={() => tabChange('Items')}>Items</button>
+              <button className='border bg-gray-700 py-1' onClick={surrender}>Surrender</button>
             </div>
           </div>
         </div>

@@ -1,49 +1,51 @@
 import { useLocation } from 'react-router-dom'
 
-const ShoppingCart = ({ items, sellCart, buyCart, setShowCart, buySell }) => {
+function ShoppingCart({ items, sellCart, buyCart, checkOut }) {
   const location = useLocation()
-  const whichCart = location.pathname == '/shop' ? buyCart : sellCart
+  const isInInventory = location.pathname === '/inventory' ? true : false
+  const cart = isInInventory ? sellCart : buyCart
 
-  const cartItem = items.map((item) => ({
-    ...item,
-    quantity: whichCart.items[item.value]
-  }))
+  const cartTotalPrice = cart.reduce((total, item) => total + (item.quantity * item.price), 0)
+  const cartTotalQuantity = cart.reduce((quantity, item) => {
+    return quantity + item.quantity
+  }, 0)
 
-  const renderCartItem = cartItem.map((item) => {
-    const itemPrice = location.pathname == '/shop' ? <span className='text-green-500'>{item.buyPrice}</span> : <span className='text-red-500'>{item.sellPrice}</span>
-    
+
+  const renderCartItems = cart.map(data => {
+    const itemIndex = items.findIndex(item => item.key === data.key)
+
     return (
-      whichCart.items[item.value] && (
-        <div key={item.value} className='p-2 flex bg-gray-700 border gap-4'>
-          <img src={item.icon} alt="" />
-          <p>Price: <br/>{itemPrice}</p>
-          <p>Owned: <br/>{item.quantity}</p>
-          <p>Quantity: <br/>{whichCart.items[item.value]}</p>    
+      <div key={data.key} className='flex flex-col gap-1 p-2 bg-gray-700 border' >
+        <div className='flex gap-4 items-center'>
+          <img src={items[itemIndex].icon} alt={items[itemIndex].key} className='h-14 w-14' />
+          <p>Price: {data.price}</p>
+          <p>Owned: {items[itemIndex].quantity}</p>
+          <p>Quantity: {data.quantity}</p>
         </div>
-      )
+      </div>
     )
   })
 
   return (
-    <div className='h-full w-full min-w-[325px] flex flex-col font-dotgothic16-regular text-center text-white border bg-gray-800 p-2 m-5 lg:m-0 justify-between rounded-md'>
-      {whichCart.totalQuantity ? 
+    <div className='h-full w-full min-w-[425px] flex flex-col font-dotgothic16-regular text-center text-white border bg-gray-800 p-2 m-5 lg:m-0 justify-between rounded-md'>
+       {cart.length ? 
         <div className='flex flex-col gap-2 w-full'>
-          {renderCartItem}
+           {renderCartItems}
         </div>
         :
-        'Shopping cart is empty'
-        }
-      <div>
-        {whichCart.totalPrice > 0 && <p className='font-dotgothic16-regular'>{`Total price: ${whichCart.totalPrice} for ${whichCart.totalQuantity} items.`}</p>}
+         'Shopping cart is empty'
+       }
+       <div className='w-full place-content-center items-center'>
+        {cartTotalPrice > 0 && <p className='font-dotgothic16-regular'>{`Total price: ${cartTotalPrice} for ${cartTotalQuantity} items.`}</p>}
         <button 
           className='border px-4 bg-gray-700 w-40 p-1'
           value={location.pathname == '/shop' ? 'buyItems' : 'sellItems'}
-          onClick={(e) => buySell(e.currentTarget.value)}  
+          onClick={(e) => checkOut(e.currentTarget.value)}  
         >
           <p>{location.pathname == '/shop' ? 'Buy' : 'Sell'}</p>
         </button>
-      </div>
-    </div>
+       </div>
+     </div>
   )
 }
 

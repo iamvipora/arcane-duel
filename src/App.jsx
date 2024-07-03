@@ -13,33 +13,10 @@ import { FaShoppingCart } from "react-icons/fa"
 function App() {
   const [playerGold, setPlayerGold] = useState(JSON.parse(localStorage.getItem('playerGold')) || 1000)
   const [playerItem, setPlayerItem] = useState(JSON.parse(localStorage.getItem('playerItem')) || {potion: 0, barrier: 0, doubleSword: 0})
-  const [tempCart, setTempCart] = useState({
-    items: {
-      potion: 0,
-      barrier: 0,
-      doubleSword: 0
-    },
-    totalQuantity: 0,
-    totalPrice: 0
-  })
-  const [sellCart, setSellCart] = useState({
-    items: {
-      potion: 0,
-      barrier: 0,
-      doubleSword: 0
-    },
-    totalQuantity: 0,
-    totalPrice: 0
-  })
-  const [buyCart, setBuyCart] = useState({
-    items: {
-      potion: 0,
-      barrier: 0,
-      doubleSword: 0
-    },
-    totalQuantity: 0,
-    totalPrice: 0
-  })
+  
+  const [tempCart, setTempCart] = useState([])
+  const [sellCart, setSellCart] = useState([])
+  const [buyCart, setBuyCart] = useState([])
 
   const [isAlertVisible, setIsAlertVisible] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
@@ -47,6 +24,7 @@ function App() {
 
   const [showCart, setShowCart] = useState(false)
 
+  
   useEffect(() => {
     localStorage.setItem('playerGold', JSON.stringify(playerGold))
   }, [playerGold])
@@ -55,13 +33,6 @@ function App() {
     localStorage.setItem('playerItem', JSON.stringify(playerItem))
   }, [playerItem])
 
-  useEffect(() => {
-    let newTotalQuantity = tempCart.items.potion + tempCart.items.barrier + tempCart.items.doubleSword
-    setTempCart(prevState => ({
-      ...prevState,
-      totalQuantity: newTotalQuantity
-    }))
-  }, [tempCart.items])
 
   useEffect(() => {
     setIsAlertVisible(true)
@@ -75,103 +46,105 @@ function App() {
       }, 900)
     }, 3000)
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer)
   }, [alertMessage])
 
-  const clearTempCart = () => {
-    setTempCart({items: {
-        potion: 0,
-        barrier: 0,
-        doubleSword: 0
-      },
-      totalQuantity: 0,
-      totalPrice: 0
-    })
-  }
-
-  const clearSellCart = () =>{
-    setSellCart({items: {
-      potion: 0,
-      barrier: 0,
-      doubleSword: 0
-    },
-    totalQuantity: 0,
-    totalPrice: 0
-  })
-}
-
-  const clearBuyCart = () =>{
-    setBuyCart({items: {
-      potion: 0,
-      barrier: 0,
-      doubleSword: 0
-    },
-    totalQuantity: 0,
-    totalPrice: 0
-  })
-  }
-
   const addToCart = (action) => {
-    const whichCart = action == 'buy' ? setBuyCart : setSellCart
-    
-    if(tempCart.totalQuantity){
-      if(action == 'sell'){
-        setPlayerItem(prevState => ({
-          potion: prevState.potion - tempCart.items.potion,
-          barrier: prevState.barrier - tempCart.items.barrier,
-          doubleSword: prevState.doubleSword - tempCart.items.doubleSword
-        }))
+    const tempCartQuantity = tempCart.reduce((quantity, item) => {
+      return quantity + item.quantity
+    }, 0)
+
+    if(action === 'buy'){
+      if(tempCart.length !== 0){
+        tempCart.forEach(item => {
+          const existingItemIndex = buyCart.findIndex(cartItem => cartItem.key === item.key)
+          if(existingItemIndex !== -1){
+            const updatedBuyCart = [...buyCart]
+            updatedBuyCart[existingItemIndex] = {
+              ...updatedBuyCart[existingItemIndex],
+              quantity: updatedBuyCart[existingItemIndex].quantity + item.quantity,
+              price: updatedBuyCart[existingItemIndex].price + (item.quantity * item.price)
+            }
+            setBuyCart(updatedBuyCart)
+          } else{
+            setBuyCart(prevBuyCart => [...prevBuyCart, { ...item }])
+          }
+        })
+        setAlertMessage(`Added ${tempCartQuantity} item(s) to the cart.`)
+      } else{
+        setAlertMessage('No items were selected.')
       }
-      whichCart(prevState => ({
-        items: {
-          potion: prevState.items.potion + tempCart.items.potion,
-          barrier: prevState.items.barrier + tempCart.items.barrier,
-          doubleSword: prevState.items.doubleSword + tempCart.items.doubleSword,
-        },
-        totalQuantity: prevState.totalQuantity + tempCart.totalQuantity,
-        totalPrice: prevState.totalPrice + tempCart.totalPrice,
-      }))
-      setAlertMessage(`Added ${tempCart.totalQuantity} item(s) to cart.`)
-      clearTempCart()
-    }else{
-      setAlertMessage('There were no items selected.')
+    } else if(action === 'sell'){
+      if(tempCart.length !== 0){
+        tempCart.forEach(item => {
+          const existingItemIndex = sellCart.findIndex(cartItem => cartItem.key === item.key)
+          if (existingItemIndex !== -1){
+            const updatedSellCart = [...sellCart]
+            updatedSellCart[existingItemIndex] = {
+              ...updatedSellCart[existingItemIndex],
+              quantity: updatedSellCart[existingItemIndex].quantity + item.quantity,
+              price: updatedSellCart[existingItemIndex].price + (item.quantity * item.price)
+            }
+            setSellCart(updatedSellCart)
+          } else{
+            setSellCart(prevSellCart => [...prevSellCart, { ...item }])
+          }
+        })
+          setPlayerItem(prevPlayerItem => ({
+          potion: prevPlayerItem.potion - (tempCart.find(item => item.key === 'potion')?.quantity || 0),
+          barrier: prevPlayerItem.barrier - (tempCart.find(item => item.key === 'barrier')?.quantity || 0),
+          doubleSword: prevPlayerItem.doubleSword - (tempCart.find(item => item.key === 'doubleSword')?.quantity || 0)
+        }))
+        setAlertMessage(`Added ${tempCartQuantity} item(s) to the sell cart.`)
+      } else {
+        setAlertMessage('No items were selected.')
+      }
     }
+    setTempCart([])
   }
 
-  const buySell = (action) => {
-    if(action == 'buyItems'){
-      if(buyCart.totalQuantity){
-        setPlayerItem(prevState => ({
-          potion: prevState.potion + cart.items.potion,
-          barrier: prevState.barrier + cart.items.barrier,
-          doubleSword: prevState.doubleSword + cart.items.doubleSword
-        }))
-        setAlertMessage(`Bought ${buyCart.totalQuantity} item(s) for ${buyCart.totalPrice}.`)
-        setPlayerGold(prevState => prevState - buyCart.totalPrice)
+  const checkOut = (action) => {
+    if(action === 'buyItems'){
+      if(buyCart.length !== 0){
+        const buyCartTotalPrice = buyCart.reduce((total, item) => total + (item.quantity * item.price), 0)
+        const buyCartTotalQuantity = buyCart.reduce((quantity, item) => {
+          return quantity + item.quantity
+        }, 0)
+  
+        if(playerGold - buyCartTotalPrice >= 0){
+          setPlayerGold(prevGold => prevGold - buyCartTotalPrice)
+
+          buyCart.forEach(item => {
+            setPlayerItem(prevPlayerItem => ({
+              ...prevPlayerItem,
+              [item.key]: prevPlayerItem[item.key] + item.quantity
+            }))
+          })
+  
+          setAlertMessage(`${buyCartTotalQuantity} items bought for ${buyCartTotalPrice} gold.`)
+          setBuyCart([])
+        } else{
+          setAlertMessage('Insufficient gold.')
+        }
       } else{
-        setAlertMessage('There were no items on the cart.')
+        setAlertMessage('Cart is empty.')
       }
-      setShowCart(prevState => !prevState)
-      clearTempCart()
-      clearBuyCart()
-    } else if(action == 'sellItems'){
-      if(sellCart.totalQuantity){
-        // setPlayerItem(prevState => ({
-        //   potion: prevState.potion - sellCart.items.potion,                   
-        //   barrier: prevState.barrier - sellCart.items.barrier,
-        //   doubleSword: prevState.doubleSword - sellCart.items.doubleSword
-        // }))
-        setAlertMessage(`Sold ${sellCart.totalQuantity} item(s) for ${sellCart.totalPrice}.`)
-        setPlayerGold(prevState => prevState + sellCart.totalPrice)
+    } else if(action === 'sellItems'){
+      if(sellCart.length !== 0){
+        const sellCartTotalPrice = sellCart.reduce((total, item) => total + (item.quantity * item.price), 0)
+        const sellCartTotalQuantity = sellCart.reduce((quantity, item) => {
+          return quantity + item.quantity
+        }, 0)
+
+        setPlayerGold(prevGold => prevGold + sellCartTotalPrice)
+        setAlertMessage(`${sellCartTotalQuantity} item(s) sold for ${sellCartTotalPrice} gold.`)
+        setSellCart([])
       } else{
-        setAlertMessage('There were no items on the cart.')
+        setAlertMessage('Sell cart is empty.')
       }
-      setShowCart(prevState => !prevState)
-      clearTempCart()
-      clearSellCart()
     }
   }
-
+  
   const items = [
     {
       key: 'potion',
@@ -205,12 +178,11 @@ function App() {
   const commonProps = {
     items,
     playerGold,
-    playerItem,
     setPlayerGold,
-    setPlayerItem,
+    setPlayerItem
   }
 
-  const buySellProps = {
+  const buyAndSellProps = {
     sellCart,
     buyCart,
     tempCart,
@@ -224,7 +196,7 @@ function App() {
     setShowCart,
     setAlertMessage,
     addToCart, 
-    buySell,
+    checkOut,
     FaShoppingCart
   }
 
@@ -233,8 +205,8 @@ function App() {
       <Routes>
       <Route index element={<Index />} />
         <Route path='/combat' element={<Combat {...commonProps} />} />
-        <Route path='/inventory' element={<Inventory {...commonProps} {...buySellProps} />} />
-        <Route path='/shop' element={<Shop {...commonProps} {...buySellProps} />} />
+        <Route path='/inventory' element={<Inventory {...commonProps} {...buyAndSellProps} />} />
+        <Route path='/shop' element={<Shop {...commonProps} {...buyAndSellProps} />} />
         <Route path='*' element={<Error />} />
       </Routes>
     </BrowserRouter>
