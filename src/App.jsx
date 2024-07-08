@@ -144,7 +144,16 @@ function App() {
       }
     }
   }
-  
+
+  const removeFromCart = (target, cart, location) => {
+    const updateCart = location ? setSellCart : setBuyCart
+
+    const itemIndex = cart.findIndex(item => item.key === target)
+    const newCart = cart.filter((_, index) => index !== itemIndex)
+
+    updateCart(newCart)
+  }  
+
   const items = [
     {
       key: 'potion',
@@ -197,6 +206,7 @@ function App() {
     setAlertMessage,
     addToCart, 
     checkOut,
+    removeFromCart,
     FaShoppingCart
   }
 

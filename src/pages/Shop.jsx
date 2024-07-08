@@ -5,7 +5,7 @@ import ShoppingCart from '../components/ShoppingCart'
 import BackgroundImage from '/images/background.jpg'
 import GoldCoinsIcon from '/images/gold-coins.png'
 
-function Shop({ items, playerGold, buyCart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setBuyCart, setTempCart, setShowCart, setAlertMessage, checkOut, addToCart, FaShoppingCart }) {
+function Shop({ items, playerGold, buyCart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setBuyCart, setTempCart, setShowCart, setAlertMessage, checkOut, addToCart, removeFromCart, FaShoppingCart }) {
   const renderItemBox = items.map((data) => {
     return <ItemBox
       key={data.key}
@@ -13,6 +13,7 @@ function Shop({ items, playerGold, buyCart, tempCart, showCart, isAlertVisible, 
       tempCart={tempCart}
       setTempCart={setTempCart}
       setAlertMessage={setAlertMessage}
+      
     />
   })
 
@@ -31,6 +32,7 @@ function Shop({ items, playerGold, buyCart, tempCart, showCart, isAlertVisible, 
             showCart={showCart}
             setBuyCart={setBuyCart}
             checkOut={checkOut}
+            removeFromCart={removeFromCart}
           />
           <button 
             className='font-press-start'
@@ -80,6 +82,7 @@ function Shop({ items, playerGold, buyCart, tempCart, showCart, isAlertVisible, 
                 showCart={showCart}
                 setBuyCart={setBuyCart}
                 checkOut={checkOut}
+                removeFromCart={removeFromCart}
               />
             </div>
           </div>

@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom'
 
-function ShoppingCart({ items, sellCart, buyCart, checkOut }) {
+function ShoppingCart({ items, sellCart, buyCart, checkOut, removeFromCart }) {
   const location = useLocation()
   const isInInventory = location.pathname === '/inventory' ? true : false
   const cart = isInInventory ? sellCart : buyCart
@@ -22,20 +22,30 @@ function ShoppingCart({ items, sellCart, buyCart, checkOut }) {
           <p>Owned: {items[itemIndex].quantity}</p>
           <p>Quantity: {data.quantity}</p>
         </div>
+        <div>
+          <button 
+            className='border px-4 bg-gray-700 w-40 p-1 mt-2'
+            onClick={() => removeFromCart(data.key, cart, isInInventory)}
+          >
+            Remove item
+          </button>
+        </div>
       </div>
     )
   })
 
   return (
-    <div className='h-full w-full min-w-[425px] flex flex-col font-dotgothic16-regular text-center text-white border bg-gray-800 p-2 m-5 lg:m-0 justify-between rounded-md'>
-       {cart.length ? 
-        <div className='flex flex-col gap-2 w-full'>
-           {renderCartItems}
-        </div>
-        :
-         'Shopping cart is empty'
-       }
-       <div className='w-full place-content-center items-center'>
+    <div className='h-full w-full min-w-[425px] flex flex-col justify-between font-dotgothic16-regular text-center text-white border bg-gray-800 p-2 m-5 lg:m-0 rounded-md text-xl'>
+      <div className='flex place-content-center gap-2 w-full py-10'>
+        {cart.length ? 
+          <div className='flex flex-col gap-2 w-full'>
+            {renderCartItems}
+          </div>
+          :
+          <p>Shopping cart is empty</p>
+        }
+       </div>
+       <div className='w-full place-content-center items-center py-10 gap-2'>
         {cartTotalPrice > 0 && <p className='font-dotgothic16-regular'>{`Total price: ${cartTotalPrice} for ${cartTotalQuantity} items.`}</p>}
         <button 
           className='border px-4 bg-gray-700 w-40 p-1'

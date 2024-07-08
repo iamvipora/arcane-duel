@@ -5,7 +5,7 @@ import ShoppingCart from '../components/ShoppingCart'
 import BackgroundImage from '/images/background.jpg'
 import GoldCoinsIcon from '/images/gold-coins.png'
 
-function Inventory({ items, playerGold, sellCart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setPlayerGold, setPlayerItem, setSellCart, setTempCart, setShowCart, setAlertMessage, checkOut, addToCart, FaShoppingCart }) {
+function Inventory({ items, playerGold, sellCart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setPlayerGold, setPlayerItem, setSellCart, setTempCart, setShowCart, setAlertMessage, checkOut, addToCart, removeFromCart, FaShoppingCart }) {
   const renderItemBox = items.map((data) => {
     return <ItemBox
       key={data.key}
@@ -34,6 +34,7 @@ function Inventory({ items, playerGold, sellCart, tempCart, showCart, isAlertVis
             showCart={showCart}
             setSellCart={setSellCart}
             checkOut={checkOut}
+            removeFromCart={removeFromCart}
           />
           <button 
             className='font-press-start'
@@ -102,6 +103,7 @@ function Inventory({ items, playerGold, sellCart, tempCart, showCart, isAlertVis
                 showCart={showCart}
                 setSellCart={setSellCart}
                 checkOut={checkOut}
+                removeFromCart={removeFromCart}
               />
             </div>
           </div>
