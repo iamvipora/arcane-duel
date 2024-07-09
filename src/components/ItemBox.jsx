@@ -4,7 +4,10 @@ import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
 
 function ItemBox({ data, tempCart, setTempCart, setAlertMessage }) {
   const location = useLocation()
-  const itemPrice = location.pathname === '/shop' ? data.buyPrice : data.sellPrice
+  const isInInventory = location.pathname === '/inventory' ? true : false
+  
+  const itemPrice = isInInventory ? data.sellPrice : data.buyPrice
+  const textColor = isInInventory ? 'text-green-500' : 'text-red-500'
 
   useEffect(() => {
     setTempCart([])
@@ -58,7 +61,7 @@ function ItemBox({ data, tempCart, setTempCart, setAlertMessage }) {
             <p>{data.description}</p>
           </div>
           <div className='font-dotgothic16-regular hidden sm:block sm:col-span-2'>
-            <p>Price: <span className={`${location.pathname === '/shop' ? 'text-green-500' : 'text-red-500'}`}>{itemPrice}</span></p>
+            <p>Price: <span className={textColor}>{itemPrice}</span></p>
           </div>
           <div className='font-dotgothic16-regular hidden sm:block sm:col-span-2'>
             <p>Owned: {data.quantity}</p>
