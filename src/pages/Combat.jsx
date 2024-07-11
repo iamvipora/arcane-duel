@@ -295,7 +295,7 @@ function Combat({ items, playerGold, playerItem, setPlayerGold, setPlayerItem })
 
   return (
     <div className='min-h-screen h-full w-screen min-w-[375px] flex place-content-center text-white text-lg font-dotgothic16-regular bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${BackgroundImage})` }}>
-      <div className='min-w-[320px] max-w-[800px] flex flex-col my-5 text-center'>
+      <div className='min-w-[320px] max-w-[625px] flex flex-col my-5 text-center'>
         <h1 className='text-3xl font-press-start'>Combat</h1>
         <div className='h-full min-w-[320px] max-w-[800px] m-5 p-2 border rounded-md bg-gray-800'>
           <span className='flex items-center'>

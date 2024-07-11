@@ -1,11 +1,12 @@
 import { useLocation } from 'react-router-dom'
 import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io"
 
-function ShoppingCart({ items, sellCart, buyCart, checkOut, removeFromCart }) {
+function ShoppingCart({ items, sellCart, buyCart, setSellCart, setBuyCart, checkOut, removeFromCart }) {
   const location = useLocation()
   const isInInventory = location.pathname === '/inventory' ? true : false
   
   const cart = isInInventory ? sellCart : buyCart
+  const setCart = isInInventory ? setSellCart : setBuyCart
   const textColor = isInInventory ? 'text-green-500' : 'text-red-500'
 
   const cartTotalPrice = cart.reduce((total, item) => total + (item.quantity * item.price), 0)
@@ -13,9 +14,25 @@ function ShoppingCart({ items, sellCart, buyCart, checkOut, removeFromCart }) {
     return quantity + item.quantity
   }, 0)
 
-
   const renderCartItems = cart.map(data => {
     const itemIndex = items.findIndex(item => item.key === data.key)
+
+    const updateCart = (action) => {
+      const cartItemIndex = cart.findIndex(item => item.key === data.key)
+      const cartItem = cart[cartItemIndex]
+      
+      if(action == 'addItem'){
+        const updatedCart = cart.map((item, index) => cart[index].key === data.key ? { ...item, quantity: item.quantity + 1 } : item)
+        setCart(updatedCart)
+      } else if(action === 'removeItem'){ 
+        const updatedCart = cartItem.quantity > 1
+          ? cart.map((item, index) => cart[index].key === data.key ? 
+            { ...item, quantity: item.quantity - 1 } : item )
+          : 
+            cart.filter((_, index) => index !== cartItemIndex)
+        setCart(updatedCart)
+      }
+    }
 
     return (
       <div key={data.key} className='flex flex-col gap-1 bg-gray-700 border'>
@@ -25,9 +42,9 @@ function ShoppingCart({ items, sellCart, buyCart, checkOut, removeFromCart }) {
             <p>Price: <span className={textColor}>{data.price}</span></p>
             <p>Owned: {items[itemIndex].quantity}</p>
             <p className='flex'>
-              <button onClick={() => console.log('left')}>{<IoMdArrowDropleft className='h-8 w-8'/>}</button> 
+              <button onClick={() => updateCart('removeItem')}>{<IoMdArrowDropleft className='h-8 w-8'/>}</button> 
               {data.quantity}
-              <button onClick={() => console.log('right')}>{<IoMdArrowDropright className='h-8 w-8'/>}</button>
+              <button onClick={() => updateCart('addItem')}>{<IoMdArrowDropright className='h-8 w-8'/>}</button>
             </p>
           </div>
         </div>

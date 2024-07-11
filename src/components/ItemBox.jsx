@@ -23,7 +23,7 @@ function ItemBox({ data, tempCart, setTempCart, setAlertMessage }) {
         const canAddItem = isInInventory ? existingItem.quantity < data.quantity : true
   
         if(canAddItem){
-          const updatedTempCart = tempCart.map((item, index) => index === existingItemIndex ? { ...item, quantity: item.quantity + 1, price: item.price + price } : item)
+          const updatedTempCart = tempCart.map((item, index) => index === existingItemIndex ? { ...item, quantity: item.quantity + 1 } : item)
           setTempCart(updatedTempCart)
         } else{
           setAlertMessage('Cannot add more.')
@@ -41,19 +41,16 @@ function ItemBox({ data, tempCart, setTempCart, setAlertMessage }) {
     } else if(type === 'removeItem' && existingItemIndex !== -1){
       const existingItem = tempCart[existingItemIndex]
       const updatedTempCart = existingItem.quantity > 1
-        ? tempCart.map((item, index) =>
-            index === existingItemIndex
-              ? { ...item, quantity: item.quantity - 1, price: item.price - price }
-              : item
-          )
-        : tempCart.filter((_, index) => index !== existingItemIndex)
-  
+        ? tempCart.map((item, index) => index === existingItemIndex ? 
+          { ...item, quantity: item.quantity - 1 } : item )
+        : 
+          tempCart.filter((_, index) => index !== existingItemIndex)
       setTempCart(updatedTempCart)
     }
   }
   
   return (
-    <div className='border flex flex-col bg-gray-700 text-lg p-2'>
+    <div className='border flex flex-col bg-gray-700 text-lg p-1'>
       <div className='relative flex flex-col p-1'>
         <div className='flex items-center w-full justify-between sm:grid sm:grid-cols-10'>
           <img src={data.icon} alt={data.value} className='h-14 w-14'/>
