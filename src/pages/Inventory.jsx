@@ -5,7 +5,7 @@ import ShoppingCart from '../components/ShoppingCart'
 import BackgroundImage from '/images/background.jpg'
 import GoldCoinsIcon from '/images/gold-coins.png'
 
-function Inventory({ items, playerGold, sellCart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setPlayerGold, setPlayerItem, setSellCart, setTempCart, setShowCart, setAlertMessage, checkOut, addToCart, removeFromCart, FaShoppingCart }) {
+function Inventory({ items, playerGold, playerItem, sellCart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setPlayerGold, setPlayerItem, setSellCart, setTempCart, setShowCart, setAlertMessage, checkOut, addToCart, removeFromCart, FaShoppingCart }) {
   const renderItemBox = items.map((data) => {
     return <ItemBox
       key={data.key}
@@ -30,8 +30,10 @@ function Inventory({ items, playerGold, sellCart, tempCart, showCart, isAlertVis
           <h1 className='font-press-start text-3xl'>Cart</h1>
           <ShoppingCart
             items={items}
+            playerItem={playerItem}
             sellCart={sellCart}
             showCart={showCart}
+            setPlayerItem={setPlayerItem}
             setSellCart={setSellCart}
             checkOut={checkOut}
             removeFromCart={removeFromCart}
@@ -99,9 +101,11 @@ function Inventory({ items, playerGold, sellCart, tempCart, showCart, isAlertVis
             <div className='ml-2 hidden lg:block'>
               <ShoppingCart
                 items={items}
+                playerItem={playerItem}
                 sellCart={sellCart}
                 showCart={showCart}
                 setSellCart={setSellCart}
+                setPlayerItem={setPlayerItem}
                 checkOut={checkOut}
                 removeFromCart={removeFromCart}
               />

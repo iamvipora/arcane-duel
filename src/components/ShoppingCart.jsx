@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom'
 import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io"
 
-function ShoppingCart({ items, sellCart, buyCart, setSellCart, setBuyCart, checkOut, removeFromCart }) {
+function ShoppingCart({ items, playerItem, sellCart, buyCart, setPlayerItem, setSellCart, setBuyCart, checkOut, removeFromCart }) {
   const location = useLocation()
   const isInInventory = location.pathname === '/inventory' ? true : false
   
@@ -22,14 +22,32 @@ function ShoppingCart({ items, sellCart, buyCart, setSellCart, setBuyCart, check
       const cartItem = cart[cartItemIndex]
       
       if(action == 'addItem'){
-        const updatedCart = cart.map((item, index) => cart[index].key === data.key ? { ...item, quantity: item.quantity + 1 } : item)
-        setCart(updatedCart)
+        if(isInInventory){
+          const itemName = Object.keys(playerItem).find(item => item === cartItem.key)
+          if(playerItem[itemName] > 0){
+            setPlayerItem(prevPlayerItem => ({
+              ...prevPlayerItem,
+              [cartItem.key]: prevPlayerItem[cartItem.key] - 1
+            }))
+            const updatedCart = cart.map((item, index) => cart[index].key === data.key ? { ...item, quantity: item.quantity + 1 } : item)
+            setCart(updatedCart)
+          }   
+        } else{
+          const updatedCart = cart.map((item, index) => cart[index].key === data.key ? { ...item, quantity: item.quantity + 1 } : item)
+          setCart(updatedCart)
+        }
       } else if(action === 'removeItem'){ 
+        if(isInInventory){
+          setPlayerItem(prevPlayerItem => ({
+            ...prevPlayerItem,
+            [cartItem.key]: prevPlayerItem[cartItem.key] + 1
+          }))
+        } 
         const updatedCart = cartItem.quantity > 1
-          ? cart.map((item, index) => cart[index].key === data.key ? 
-            { ...item, quantity: item.quantity - 1 } : item )
-          : 
-            cart.filter((_, index) => index !== cartItemIndex)
+        ? cart.map((item, index) => cart[index].key === data.key ? 
+          { ...item, quantity: item.quantity - 1 } : item )
+        : 
+          cart.filter((_, index) => index !== cartItemIndex)
         setCart(updatedCart)
       }
     }

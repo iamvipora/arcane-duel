@@ -15,8 +15,8 @@ function App() {
   const [playerItem, setPlayerItem] = useState(JSON.parse(localStorage.getItem('playerItem')) || {potion: 0, barrier: 0, doubleSword: 0})
   
   const [tempCart, setTempCart] = useState([])
-  const [sellCart, setSellCart] = useState([])
-  const [buyCart, setBuyCart] = useState([])
+  const [sellCart, setSellCart] = useState(JSON.parse(localStorage.getItem('sellCart')) || [])
+  const [buyCart, setBuyCart] = useState(JSON.parse(localStorage.getItem('buyCart')) || [])
 
   const [isAlertVisible, setIsAlertVisible] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
@@ -32,6 +32,14 @@ function App() {
   useEffect(() => {
     localStorage.setItem('playerItem', JSON.stringify(playerItem))
   }, [playerItem])
+
+  useEffect(() => {
+    localStorage.setItem('sellCart', JSON.stringify(sellCart))
+  }, [sellCart])
+
+  useEffect(() => {
+    localStorage.setItem('buyCart', JSON.stringify(buyCart))
+  }, [buyCart])
 
 
   useEffect(() => {
@@ -90,11 +98,13 @@ function App() {
             setSellCart(prevSellCart => [...prevSellCart, { ...item }])
           }
         })
+        tempCart.forEach(item => {
+          const itemIndex = tempCart.findIndex(cartItem => cartItem.key === item.key)
           setPlayerItem(prevPlayerItem => ({
-          potion: prevPlayerItem.potion - (tempCart.find(item => item.key === 'potion')?.quantity || 0),
-          barrier: prevPlayerItem.barrier - (tempCart.find(item => item.key === 'barrier')?.quantity || 0),
-          doubleSword: prevPlayerItem.doubleSword - (tempCart.find(item => item.key === 'doubleSword')?.quantity || 0)
-        }))
+            ...prevPlayerItem,
+            [item.key]: prevPlayerItem[item.key] - (tempCart[itemIndex].quantity || 0)
+          }))
+        })
         setAlertMessage(`Added ${tempCartQuantity} item(s) to the sell cart.`)
       } else {
         setAlertMessage('No items were selected.')
@@ -187,6 +197,7 @@ function App() {
   const commonProps = {
     items,
     playerGold,
+    playerItem,
     setPlayerGold,
     setPlayerItem
   }
