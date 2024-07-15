@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import './index.css'
 import Index from './pages/Index'
 import Combat from './pages/Combat'
 import Inventory from './pages/Inventory'
 import Shop from './pages/Shop'
+import AudioPlayer from './components/BgAndAudio'
 import PotionIcon from '/images/potion.png'
 import BarrierIcon from '/images/barrier.png'
 import DoubleEdgedSwordIcon from '/images/2-sword.png'
+import BgAnimated from '/images/bg-animated.gif'
+import BgStatic from '/images/bg-static.png'
 import { FaShoppingCart } from "react-icons/fa"
 
 function App() {
@@ -23,8 +26,10 @@ function App() {
   const [fadeClass, setFadeClass] = useState('animate-fadeIn')
 
   const [showCart, setShowCart] = useState(false)
-
   
+  const [isBgAnimationOn, setIsBgAnimationOn] = useState(true)
+  const background = isBgAnimationOn ? BgAnimated : BgStatic
+
   useEffect(() => {
     localStorage.setItem('playerGold', JSON.stringify(playerGold))
   }, [playerGold])
@@ -195,6 +200,7 @@ function App() {
   ]
 
   const commonProps = {
+    background,
     items,
     playerGold,
     playerItem,
@@ -223,8 +229,12 @@ function App() {
 
   return (
     <BrowserRouter>
+      <AudioPlayer 
+        isBgAnimationOn={isBgAnimationOn}
+        setIsBgAnimationOn={setIsBgAnimationOn}
+      />
       <Routes>
-      <Route index element={<Index />} />
+      <Route index element={<Index background={background}/>} />
         <Route path='/combat' element={<Combat {...commonProps} />} />
         <Route path='/inventory' element={<Inventory {...commonProps} {...buyAndSellProps} />} />
         <Route path='/shop' element={<Shop {...commonProps} {...buyAndSellProps} />} />
@@ -232,6 +242,7 @@ function App() {
       </Routes>
     </BrowserRouter>
   )
+
 }
 
 export default App

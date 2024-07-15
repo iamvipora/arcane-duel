@@ -2,10 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import ItemBox from '../components/ItemBox'
 import ShoppingCart from '../components/ShoppingCart'
-import BackgroundImage from '/images/background.jpg'
 import GoldCoinsIcon from '/images/gold-coins.png'
 
-function Inventory({ items, playerGold, playerItem, sellCart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setPlayerGold, setPlayerItem, setSellCart, setTempCart, setShowCart, setAlertMessage, checkOut, addToCart, removeFromCart, FaShoppingCart }) {
+function Inventory({ background, items, playerGold, playerItem, sellCart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setPlayerGold, setPlayerItem, setSellCart, setTempCart, setShowCart, setAlertMessage, checkOut, addToCart, removeFromCart, FaShoppingCart }) {
   const renderItemBox = items.map((data) => {
     return <ItemBox
       key={data.key}
@@ -46,7 +45,7 @@ function Inventory({ items, playerGold, playerItem, sellCart, tempCart, showCart
           </button> 
         </div>
       }
-      <div className='min-h-screen h-full w-screen min-w-[375px] flex place-content-center text-white text-lg bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${BackgroundImage})` }}>
+      <div className='min-h-screen h-full w-screen min-w-[375px] flex place-content-center text-white text-lg bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${background})` }}>
         <div className='max-w-[1200px] flex flex-col my-5 font-press-start text-center'>
           <h1 className='text-3xl'>Inventory</h1>
           <div className='flex min-w-[320px] h-full m-5'>
