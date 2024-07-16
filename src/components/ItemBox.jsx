@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import ItemFrame from '/images/item-frame.png'
 import { useLocation } from 'react-router-dom'
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
 
@@ -52,18 +53,20 @@ function ItemBox({ data, tempCart, setTempCart, setAlertMessage }) {
   return (
     <div className='border flex flex-col bg-gray-700 text-lg p-1'>
       <div className='relative flex flex-col p-1'>
-        <div className='flex items-center w-full justify-between sm:grid sm:grid-cols-10'>
-          <img src={data.icon} alt={data.value} className='h-14 w-14'/>
-          <div className='text-left font-dotgothic16-regular p-2 sm:col-span-4'>
+        <div className='grid grid-cols-10 items-center w-full justify-between'>
+          <div className='col-span-2 sm:col-span-1 h-full flex bg-cover bg-no-repeat bg-center items-center justify-center' style={{ backgroundImage: `url(${ItemFrame})` }}>
+            <img src={data.icon} alt={data.value} className='h-10 w-10'/>
+          </div>  
+          <div className='col-span-8 sm:col-span-4 text-left font-dotgothic16-regular p-2 '>
             <p>{data.description}</p>
           </div>
-          <div className='font-dotgothic16-regular hidden sm:block sm:col-span-2'>
+          <div className='sm:col-span-2 font-dotgothic16-regular hidden sm:block'>
             <p>Price: <span className={textColor}>{itemPrice}</span></p>
           </div>
-          <div className='font-dotgothic16-regular hidden sm:block sm:col-span-2'>
+          <div className='sm:col-span-2 font-dotgothic16-regular hidden sm:block'>
             <p>Owned: {data.quantity}</p>
           </div>
-          <div className='sm:col-start-11'>
+          <div className='col-start-11'>
             <div className='font-dotgothic16-regular place-items-center flex flex-col'>
               <button onClick={() => updateTempCart('addItem', data.key, itemPrice)}>
                 <IoMdArrowDropup className='h-8 w-8'/>

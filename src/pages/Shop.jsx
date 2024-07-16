@@ -43,7 +43,7 @@ function Shop({ background, items, playerGold, buyCart, tempCart, showCart, isAl
       }
       <div className='min-h-screen h-full w-screen flex place-content-center text-white text-lg bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${background})` }}>
         <div className='max-w-[1200px] flex flex-col my-5 font-press-start text-center'>
-          <h1 className='text-3xl'></h1>
+          <h1 className='text-3xl'>Shop</h1>
           <div className='flex min-w-[320px] h-full m-5'>
             <div className='h-full p-2 border rounded-md bg-gray-800'>
               <div className='flex justify-between font-dotgothic16-regular '>
