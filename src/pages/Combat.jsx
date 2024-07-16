@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ActionBox from '../components/ActionBox'
+import HealthBar from '../components/HealthBar'
 import GoldCoinsIcon from '/images/gold-coins.png'
 import ShieldIcon from '/images/shield.png'
 import StaffIcon from '/images/staff.png'
@@ -27,13 +28,13 @@ function Combat({ background, items, playerGold, playerItem, setPlayerGold, setP
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (playerHealth === 0) {
+    if(playerHealth === 0){
       setGameText('You died after losing all your HP.')
       setTimeout(() => {
         resetGame()
       }, 1500)
       
-    } else if (enemyHealth === 0) {
+    } else if(enemyHealth === 0){
       setGameText('You broke apart your enemy and won. Gain an additional 100 gold for winning.')
       updatePlayerGold()
       setTimeout(() => {
@@ -302,9 +303,9 @@ function Combat({ background, items, playerGold, playerItem, setPlayerGold, setP
             {playerGold}
           </span>
           <div className='flex flex-col gap-4 items-center '>
-            <div className='w-full flex justify-between border bg-gray-700 p-2'>
-              <p>Player: {<span className='text-red-600'>{playerHealth}</span>}</p>
-              <p>Enemy: {<span className='text-red-600'>{enemyHealth}</span>}</p>
+            <div className='w-full flex flex-col sm:flex-row justify-between border bg-gray-700 p-2 gap-2'>
+              <span className='flex'>Player: <HealthBar currentHealth={playerHealth}/></span>
+              <span className='flex place-content-end'><HealthBar currentHealth={enemyHealth} entity={'enemy'}/> :Enemy</span>
             </div>
             <div className='flex w-full min-h-12 p-2 text-center items-center border bg-gray-700'>
               <h1 className='w-full'>{gameText}</h1>
