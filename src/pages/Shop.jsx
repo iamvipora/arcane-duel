@@ -41,12 +41,12 @@ function Shop({ background, items, playerGold, buyCart, tempCart, showCart, isAl
           </button> 
         </div>
       }
-      <div className='min-h-screen h-full w-screen flex place-content-center text-white text-lg bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${background})` }}>
+      <div className={`min-h-screen h-full w-screen flex place-content-center text-white text-lg bg-cover bg-center bg-no-repeat`} style={{ backgroundImage: `url(${background})` }}>
         <div className='max-w-[1200px] flex flex-col my-5 font-press-start text-center'>
           <h1 className='text-3xl'>Shop</h1>
           <div className='flex min-w-[320px] h-full m-5'>
             <div className='h-full p-2 border rounded-md bg-gray-800'>
-              <div className='flex justify-between font-dotgothic16-regular '>
+              <div className='flex justify-between font-dotgothic16-regular'>
                 <div className='flex items-center justify-between'>
                   <img src={GoldCoinsIcon} alt='Icon'/>
                   <p>{playerGold}</p>
@@ -64,7 +64,7 @@ function Shop({ background, items, playerGold, buyCart, tempCart, showCart, isAl
               </div>
               <div className='flex gap-2 my-4 w-full font-dotgothic16-regular place-content-center sm:place-content-end'>
                 <button 
-                  className='w-40 border py-1 bg-gray-700'
+                  className='w-40 py-1 bg-gray-700 border border-b-8 border-r-4 rounded-md'
                   onClick={() => addToCart('buy')} 
                 >
                   <p>Add to cart</p>
@@ -85,9 +85,11 @@ function Shop({ background, items, playerGold, buyCart, tempCart, showCart, isAl
               />
             </div>
           </div>
-          <Link to='/'>
-            <p className='text-xl'>Back</p>
-          </Link>
+          <div className='flex items-center justify-center'>
+            <Link to='/'>
+              <p className='w-64 p-2 hover:bg-gradient-to-r from-transparent via-gray-800 to-transparent text-2xl'>Back</p>
+            </Link>
+          </div>
         </div>  
       </div>
     </>

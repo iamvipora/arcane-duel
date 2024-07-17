@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom'
-import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io"
+import ItemFrame from '/images/item-frame.png'
+import { IoMdArrowDropup, IoMdArrowDropdown } from "react-icons/io"
 
 function ShoppingCart({ items, playerItem, sellCart, buyCart, setPlayerItem, setSellCart, setBuyCart, checkOut, removeFromCart }) {
   const location = useLocation()
@@ -54,17 +55,17 @@ function ShoppingCart({ items, playerItem, sellCart, buyCart, setPlayerItem, set
 
     return (
       <div key={data.key} className='flex flex-col gap-1 bg-gray-700 border'>
-        <div className='flex gap-4 items-center p-2'>
-          <img src={items[itemIndex].icon} alt={items[itemIndex].key} className='h-14 w-14' />
-          <div className='w-full flex justify-between'>
-            <p>Price: <span className={textColor}>{data.price}</span></p>
-            <p>Owned: {items[itemIndex].quantity}</p>
-            <p className='flex'>
-              <button onClick={() => updateCart('removeItem')}>{<IoMdArrowDropleft className='h-8 w-8'/>}</button> 
-              {data.quantity}
-              <button onClick={() => updateCart('addItem')}>{<IoMdArrowDropright className='h-8 w-8'/>}</button>
-            </p>
-          </div>
+        <div className='grid grid-cols-5 items-center p-2'>
+          <div className='h-24 w-16 flex bg-cover bg-no-repeat bg-center items-center justify-center' style={{ backgroundImage: `url(${ItemFrame})` }}>
+            <img src={items[itemIndex].icon} alt={items[itemIndex].key} className='h-10 w-10'/>
+          </div>  
+          <p className='col-span-2'>Price: <span className={textColor}>{data.price}</span></p>
+          <p className='col-span-2'>Owned: {items[itemIndex].quantity}</p>
+          <p className='col-start-6 flex flex-col items-center'>
+            <button onClick={() => updateCart('addItem')}>{<IoMdArrowDropup className='h-8 w-8'/>}</button> 
+            {data.quantity}
+            <button onClick={() => updateCart('removeItem')}>{<IoMdArrowDropdown className='h-8 w-8'/>}</button>
+          </p>
         </div>
         <button 
           className='text-red-500 bg-gray-600 py-1 w-full'
@@ -91,7 +92,7 @@ function ShoppingCart({ items, playerItem, sellCart, buyCart, setPlayerItem, set
        <div className='w-full flex flex-col items-center gap-6 py-10'>
         {cartTotalPrice > 0 && <p className='font-dotgothic16-regular'>{`Total price: ${cartTotalPrice} for ${cartTotalQuantity} items.`}</p>}
         <button 
-          className='border px-4 bg-gray-700 w-40 p-1'
+          className='px-4 bg-gray-700 w-40 p-1 border border-b-8 border-r-4 rounded-md'
           value={location.pathname == '/shop' ? 'buyItems' : 'sellItems'}
           onClick={(e) => checkOut(e.currentTarget.value)}  
         >

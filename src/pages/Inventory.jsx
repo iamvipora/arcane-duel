@@ -68,7 +68,7 @@ function Inventory({ background, items, playerGold, playerItem, sellCart, tempCa
               </div>
               <div className='flex gap-2 my-4 w-full font-dotgothic16-regular place-content-center sm:place-content-end'>
                 <button 
-                  className='w-40 border py-1 bg-gray-700'
+                  className='w-40 py-1 bg-gray-700 border border-b-8 border-r-4 rounded-md'
                   onClick={() => addToCart('sell')} 
                 >
                   <p>Add to cart</p>
@@ -110,9 +110,11 @@ function Inventory({ background, items, playerGold, playerItem, sellCart, tempCa
               />
             </div>
           </div>
-          <Link to='/'>
-            <p className='text-xl'>Back</p>
-          </Link>
+          <div className='flex items-center justify-center'>
+            <Link to='/'>
+              <p className='w-64 p-2 hover:bg-gradient-to-r from-transparent via-gray-800 to-transparent text-2xl'>Back</p>
+            </Link>
+          </div>
         </div>  
       </div>
     </>
