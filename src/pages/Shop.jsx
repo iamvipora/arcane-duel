@@ -34,7 +34,7 @@ function Shop({ background, items, playerGold, buyCart, tempCart, showCart, isAl
             removeFromCart={removeFromCart}
           />
           <button 
-            className='font-press-start'
+            className='w-64 p-2 hover:bg-gradient-to-r from-transparent via-[#2d282b] to-transparent text-2xl font-press-start'
             onClick={() => setShowCart(prev => !prev)}
           >
             Back  
@@ -45,7 +45,7 @@ function Shop({ background, items, playerGold, buyCart, tempCart, showCart, isAl
         <div className='max-w-[1200px] flex flex-col my-5 font-press-start text-center'>
           <h1 className='text-3xl'>Shop</h1>
           <div className='flex min-w-[320px] h-full m-5'>
-            <div className='h-full p-2 border rounded-md bg-gray-800'>
+            <div className='h-full p-2 bg-[#2d282b] border-2 border-[#FEBF4C] rounded-md'>
               <div className='flex justify-between font-dotgothic16-regular'>
                 <div className='flex items-center justify-between'>
                   <img src={GoldCoinsIcon} alt='Icon'/>
@@ -64,7 +64,7 @@ function Shop({ background, items, playerGold, buyCart, tempCart, showCart, isAl
               </div>
               <div className='flex gap-2 my-4 w-full font-dotgothic16-regular place-content-center sm:place-content-end'>
                 <button 
-                  className='w-40 py-1 bg-gray-700 border border-b-8 border-r-4 rounded-md'
+                  className='w-40 py-1 bg-[#4C4449] border-2 border-[#FEBF4C] rounded-md'
                   onClick={() => addToCart('buy')} 
                 >
                   <p>Add to cart</p>
@@ -87,7 +87,7 @@ function Shop({ background, items, playerGold, buyCart, tempCart, showCart, isAl
           </div>
           <div className='flex items-center justify-center'>
             <Link to='/'>
-              <p className='w-64 p-2 hover:bg-gradient-to-r from-transparent via-gray-800 to-transparent text-2xl'>Back</p>
+              <p className='w-64 p-2 hover:bg-gradient-to-r from-transparent via-[#2d282b] to-transparent text-2xl'>Back</p>
             </Link>
           </div>
         </div>  

@@ -9,19 +9,19 @@ function Index({ background }) {
         <h1 className='text-[3rem]'>Arcane Duel</h1>
         <div className='flex-grow flex flex-col items-center justify-center w-full text-2xl gap-2'>
           <Link 
-            className='w-64 p-2 hover:bg-gradient-to-r from-transparent via-gray-800 to-transparent'
+            className='w-64 p-2 hover:bg-gradient-to-r from-transparent via-[#2d282b] to-transparent'
             to='/combat'
           >
             <h1 className=''>Play</h1>
           </Link>
           <Link 
-            className='w-64 p-2 hover:bg-gradient-to-r from-transparent via-gray-800 to-transparent'
+            className='w-64 p-2 hover:bg-gradient-to-r from-transparent via-[#2d282b] to-transparent'
             to='/inventory'
           >
             <h1>Inventory</h1>
           </Link>
           <Link 
-            className='w-64 p-2 hover:bg-gradient-to-r from-transparent via-gray-800 to-transparent'
+            className='w-64 p-2 hover:bg-gradient-to-r from-transparent via-[#2d282b] to-transparent'
             to='/shop'
             >
             <h1>Shop</h1>

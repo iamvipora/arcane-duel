@@ -51,7 +51,7 @@ function ItemBox({ data, tempCart, setTempCart, setAlertMessage }) {
   }
   
   return (
-    <div className='border flex flex-col bg-gray-700 text-lg p-1'>
+    <div className='bg-[#4C4449] border-2 border-[#FEBF4C] rounded-md flex flex-col text-lg p-1'>
       <div className='relative flex flex-col p-1'>
         <div className='grid grid-cols-10 items-center w-full justify-between'>
           <div className='col-span-2 sm:col-span-1 h-24 w-16 flex bg-cover bg-no-repeat bg-center items-center justify-center' style={{ backgroundImage: `url(${ItemFrame})` }}>
@@ -79,11 +79,11 @@ function ItemBox({ data, tempCart, setTempCart, setAlertMessage }) {
           </div>       
         </div>        
       </div>
-      <div className='w-full bg-gray-700 m-0 py-1 px-2 flex justify-center sm:hidden'>
+      <div className='w-full py-1 px-2 flex justify-center sm:hidden'>
         <div className='flex items-center place-content-center gap-10 w-3/4 font-dotgothic16-regular'>
-          <p>Price: <span className={`${location.pathname === '/shop' ? 'text-green-500' : 'text-red-500'}`}>{itemPrice}</span></p>
+          <p>Price: <span className={textColor}>{itemPrice}</span></p>
           <p>Owned: {data.quantity}</p>
-        </div>
+        </div>                      
       </div>
     </div>
   )

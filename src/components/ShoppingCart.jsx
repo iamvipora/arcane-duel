@@ -54,7 +54,7 @@ function ShoppingCart({ items, playerItem, sellCart, buyCart, setPlayerItem, set
     }
 
     return (
-      <div key={data.key} className='flex flex-col gap-1 bg-gray-700 border'>
+      <div key={data.key} className='flex flex-col gap-1 bg-[#4C4449] border-2 border-[#FEBF4C] rounded-md'>
         <div className='grid grid-cols-5 items-center p-2'>
           <div className='h-24 w-16 flex bg-cover bg-no-repeat bg-center items-center justify-center' style={{ backgroundImage: `url(${ItemFrame})` }}>
             <img src={items[itemIndex].icon} alt={items[itemIndex].key} className='h-10 w-10'/>
@@ -68,7 +68,7 @@ function ShoppingCart({ items, playerItem, sellCart, buyCart, setPlayerItem, set
           </p>
         </div>
         <button 
-          className='text-red-500 bg-gray-600 py-1 w-full'
+          className='text-red-500 bg-[#5d565b] py-1 w-full'
           onClick={() => removeFromCart(data.key, cart, isInInventory)}
         >
           Remove
@@ -78,7 +78,7 @@ function ShoppingCart({ items, playerItem, sellCart, buyCart, setPlayerItem, set
   })
 
   return (
-    <div className='h-full w-[375px] flex flex-col font-dotgothic16-regular text-center text-white border bg-gray-800 p-2 m-5 lg:m-0 rounded-md text-lg'>
+    <div className='h-full w-[375px] flex flex-col font-dotgothic16-regular text-center text-white bg-[#2d282b] border-2 border-[#FEBF4C] rounded-md p-2 m-5 lg:m-0 text-lg'>
       <h1 className='text-2xl font-press-start hidden lg:block'>Cart</h1>
       <div className='h-full w-full gap-2 py-4 justify-between'>
         {cart.length ? 
@@ -89,10 +89,10 @@ function ShoppingCart({ items, playerItem, sellCart, buyCart, setPlayerItem, set
           <p>Shopping cart is empty</p>
         }
        </div>
-       <div className='w-full flex flex-col items-center gap-6 py-10'>
+       <div className='w-full flex flex-col items-center gap-6 py-4'>
         {cartTotalPrice > 0 && <p className='font-dotgothic16-regular'>{`Total price: ${cartTotalPrice} for ${cartTotalQuantity} items.`}</p>}
         <button 
-          className='px-4 bg-gray-700 w-40 p-1 border border-b-8 border-r-4 rounded-md'
+          className='w-40 p-1 bg-[#4C4449] border-2 border-[#FEBF4C] rounded-md'
           value={location.pathname == '/shop' ? 'buyItems' : 'sellItems'}
           onClick={(e) => checkOut(e.currentTarget.value)}  
         >
