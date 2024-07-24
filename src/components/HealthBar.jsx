@@ -1,24 +1,17 @@
 import React from 'react'
-import HeartFull from '/images/heart-full.png'
-import HeartEmpty from '/images/heart-empty.png'
 
-const HealthBar = ({ currentHealth, entity }) => {
-  const maxHearts = 100 / 20
-  const numberOfHearts = currentHealth / 20
-  const hearts = []
-  for(let i = 0; i < maxHearts ; i++){
-    hearts.push(
-      <img
-        key={i}
-        src={i < numberOfHearts ? HeartFull : HeartEmpty}
-        alt={i < numberOfHearts ? 'Full Heart' : 'Empty Heart'}
-      />
-    )
-  }
-  if(entity == 'enemy'){
-    hearts.reverse()
-  }
-  return <div className='flex mx-1 gap-1'>{hearts}</div>
+const HealthBar = ({ health, maxHealth, entity }) => {
+  const isPlayer = entity == 'player' ? true : false
+  return (
+    <div className='relative flex w-60 h-8 bg-white rounded-md border-2 border-[#FEBF4C] items-center'>
+      <div 
+        className='h-full flex absolute rounded-md justify-center bg-red-500 font-bold'
+        style={{ width: `${health}%`}}
+      >
+        {health}%
+      </div>
+    </div>
+  )
 }
 
 export default HealthBar

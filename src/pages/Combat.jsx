@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ActionBox from '../components/ActionBox'
+import EntityIcon from '../components/EntityIcon'
 import HealthBar from '../components/HealthBar'
-import GoldCoinsIcon from '/images/gold-coins.png'
 import ShieldIcon from '/images/shield.png'
 import StaffIcon from '/images/staff.png'
 import SwordIcon from '/images/sword.png'
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
 
-function Combat({ background, items, playerGold, playerItem, setPlayerGold, setPlayerItem }) {
+function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem }) {
   const [playerHealth, setPlayerHealth] = useState(100)
   const [enemyHealth, setEnemyHealth] = useState(100)
   const [gameText, setGameText] = useState('Initiating Combat.')
@@ -36,7 +36,7 @@ function Combat({ background, items, playerGold, playerItem, setPlayerGold, setP
       
     } else if(enemyHealth === 0){
       setGameText('You broke apart your enemy and won. Gain an additional 100 gold for winning.')
-      updatePlayerGold()
+      setPlayerGold(prevPlayerGold => prevPlayerGold + 100)
       setTimeout(() => {
         resetGame()
       }, 1500)
@@ -109,10 +109,6 @@ function Combat({ background, items, playerGold, playerItem, setPlayerGold, setP
     />
   })
 
-  const updatePlayerGold = () => {
-    setPlayerGold(prevPlayerGold => prevPlayerGold + 100)
-  }
-
   const resetGame = () => {
     setGameText('The Necromancer heals the wounded and resurrects the dead.')
     setPlayerHealth('100')
@@ -122,11 +118,22 @@ function Combat({ background, items, playerGold, playerItem, setPlayerGold, setP
     }, 1500)
   }
 
-  const surrender = () => {
-    setIsOpen(prev => !prev)
-    setGameText('The Necromancer shames you for running away.')
+  const flee = () => {
+    setIsBtnDisabled(true)
+    setGameText('...')
+    const fleeSuccessRate = Math.random()
     setTimeout(() => {
-      navigate('/')
+      if(fleeSuccessRate <= 2/5){
+        setGameText('The Necromancer shames you for running away.')
+        setTimeout(() => {
+          navigate('/')
+        }, 1500)
+      } else if(fleeSuccessRate > 2/5){
+        setGameText('You failed to run away.')
+        setTimeout(() => {
+          playGame('failedToFlee')
+        }, 1500)
+      }
     }, 1500)
   }
 
@@ -179,6 +186,8 @@ function Combat({ background, items, playerGold, playerItem, setPlayerGold, setP
         } else if(enemyMove === 'Shield'){
           result = 'Lose'
         }
+      } else if(playerMove === 'failedToFlee'){
+        result = 'Lose'
       } else{
         setGameText('Invalid move.')
         setIsBtnDisabled(false)
@@ -297,24 +306,32 @@ function Combat({ background, items, playerGold, playerItem, setPlayerGold, setP
     <div className='min-h-screen h-full w-screen min-w-[375px] flex place-content-center text-white text-lg font-dotgothic16-regular bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${background})` }}>
       <div className='min-w-[320px] max-w-[625px] flex flex-col my-5 text-center'>
         <h1 className='text-3xl font-press-start'>Combat</h1>
-        <div className='h-full min-w-[320px] max-w-[800px] m-5 p-2 border rounded-md bg-gray-800'>
-          <span className='flex items-center'>
-            <img src={GoldCoinsIcon} alt='Icon'/>
-            {playerGold}
-          </span>
+        <div className='h-full min-w-[320px] max-w-[800px] m-5 p-2 bg-[#2d282b] border-2 border-[#FEBF4C] rounded-md'>
           <div className='flex flex-col gap-4 items-center '>
-            <div className='w-full flex flex-col sm:flex-row justify-between border bg-gray-700 p-2 gap-2'>
-              <span className='flex'>Player: <HealthBar currentHealth={playerHealth}/></span>
-              <span className='flex place-content-end'><HealthBar currentHealth={enemyHealth} entity={'enemy'}/> :Enemy</span>
+            <div className='flex items-center'>
+              <EntityIcon entity='player'/>
+              <HealthBar
+                entity='player'
+                health={playerHealth} 
+                maxHealth={100} 
+              />
             </div>
-            <div className='flex w-full min-h-12 p-2 text-center items-center border bg-gray-700'>
-              <h1 className='w-full'>{gameText}</h1>
+            <div className='flex items-center'>
+              <EntityIcon entity='enemy'/>
+              <HealthBar
+                entity='enemy'
+                health={enemyHealth} 
+                maxHealth={100} 
+              />
             </div>
-            <div className='flex flex-col gap-2'>
+            <div className='flex w-full min-h-12 p-2 text-center items-center bg-[#5e575b] border-2 border-[#FEBF4C] rounded-md'>
+              <h1 className='w-full '>{gameText}</h1>
+            </div>
+            <div className='flex flex-col gap-2 '>
               {activeTab == 'Attack' ? renderMoveSet : renderPlayerItems}
             </div>
             <button
-              className='border p-1 bg-gray-700 w-full sm:hidden'
+              className='w-full sm:hidden p-1 border-2 border-[#FEBF4C] bg-[#5e575b] rounded-md '
               onClick={() => setIsOpen(prev => !prev)}
             >
               <div className='flex items-center place-content-center justify-between'>
@@ -324,9 +341,27 @@ function Combat({ background, items, playerGold, playerItem, setPlayerGold, setP
               </div>
             </button>     
             <div className={`flex flex-col justify-center gap-2 w-full ${isOpen ? '' : 'hidden'} sm:grid sm:grid-cols-3`}>
-              <button className='border bg-gray-700 py-1' onClick={() => tabChange('Attack')}>Attack</button>
-              <button className='border bg-gray-700 py-1' onClick={() => tabChange('Items')}>Items</button>
-              <button className='border bg-gray-700 py-1' onClick={surrender}>Surrender</button>
+              <button 
+                className={`border-2 border-[#FEBF4C] rounded-md py-1 ${!isBtnDisabled ? 'bg-[#5e575b]' : 'bg-[#4C4449]'}`}
+                onClick={() => tabChange('Attack')}
+                disabled={isBtnDisabled}
+              >
+                Attack
+              </button>
+              <button 
+                className={`border-2 border-[#FEBF4C] rounded-md py-1 ${!isBtnDisabled ? 'bg-[#5e575b]' : 'bg-[#4C4449]'}`}
+                onClick={() => tabChange('Items')}
+                disabled={isBtnDisabled}
+                >
+                  Items
+                </button>
+              <button 
+                className={`border-2 border-[#FEBF4C] rounded-md py-1 ${!isBtnDisabled ? 'bg-[#5e575b]' : 'bg-[#4C4449]'}`} 
+                onClick={flee}
+                disabled={isBtnDisabled}
+              >
+                Flee
+              </button>
             </div>
           </div>
         </div>

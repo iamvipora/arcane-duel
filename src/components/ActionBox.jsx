@@ -6,7 +6,7 @@ function ActionBox({ data, itemName, items }) {
 
   return (
     <button 
-      className={`flex p-2 border ${!data.isBtnDisabled ? 'bg-gray-700' : 'bg-gray-900'}`}
+      className={`flex p-2 border-2 border-[#FEBF4C] rounded-md ${!data.isBtnDisabled ? 'bg-[#5e575b]' : 'bg-[#4C4449]'}`}
       value={data.value} 
       onClick={(e) => data.handleClick(e.currentTarget.value)}
       disabled={data.isBtnDisabled}
