@@ -1,29 +1,29 @@
 import React, { useState, useEffect } from 'react'
+import { Typewriter } from 'react-simple-typewriter'
 import { useNavigate } from 'react-router-dom'
 import ActionBox from '../components/ActionBox'
-import EntityIcon from '../components/EntityIcon'
-import HealthBar from '../components/HealthBar'
+import EntityUI from '../components/EntityUI'
 import ShieldIcon from '/images/shield.png'
 import StaffIcon from '/images/staff.png'
 import SwordIcon from '/images/sword.png'
-import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
+import PlayerIdle from '/images/wizard-idle.gif'
+import EnemyIdle from '/images/demon-idle.gif'
 
 function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem }) {
   const [playerHealth, setPlayerHealth] = useState(100)
   const [enemyHealth, setEnemyHealth] = useState(100)
+
   const [gameText, setGameText] = useState('Initiating Combat.')
+  const [showTypewriter, setShowTypewriter] = useState(true)
 
   const [isBtnDisabled, setIsBtnDisabled] = useState(false)
   const [isBarrierEnabled, setIsBarrierEnabled] = useState(false)
   const [isDoubleDamageEnabled, setIsDoubleDamageEnabled] = useState(false)
 
   const [activeTab, setActiveTab] = useState('Attack')
-  const [isOpen, setIsOpen] = useState(false)
   
   const attack = ['Shield', 'Staff', 'Sword']
   const itemName = [items[0].key, items[1].key, items[2].key]
-
-  const arrowDirection = isOpen ? <IoMdArrowDropdown className='h-8 w-8'/> : <IoMdArrowDropup className='h-8 w-8'/>
 
   const navigate = useNavigate()
 
@@ -42,6 +42,15 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
       }, 1500)
     }
   }, [playerHealth, enemyHealth])
+
+  useEffect(() => {
+    setShowTypewriter(false);
+    const timer = setTimeout(() => {
+      setShowTypewriter(true)
+    }, 50)
+
+    return () => clearTimeout(timer)
+  }, [gameText])
 
   const handleClick = (playerMove) => {
     setIsBtnDisabled(true)
@@ -139,7 +148,6 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
 
   const tabChange = (tab) => {
     setActiveTab(tab)
-    setIsOpen(prev => !prev)
   }
 
   const pickEnemyMove = () => {
@@ -307,40 +315,42 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
       <div className='min-w-[320px] max-w-[625px] flex flex-col my-5 text-center'>
         <h1 className='text-3xl font-press-start'>Combat</h1>
         <div className='h-full min-w-[320px] max-w-[800px] m-5 p-2 bg-[#2d282b] border-2 border-[#FEBF4C] rounded-md'>
-          <div className='flex flex-col gap-4 items-center '>
-            <div className='flex items-center'>
-              <EntityIcon entity='player'/>
-              <HealthBar
-                entity='player'
-                health={playerHealth} 
-                maxHealth={100} 
-              />
-            </div>
-            <div className='flex items-center'>
-              <EntityIcon entity='enemy'/>
-              <HealthBar
-                entity='enemy'
-                health={enemyHealth} 
-                maxHealth={100} 
-              />
-            </div>
-            <div className='flex w-full min-h-12 p-2 text-center items-center bg-[#5e575b] border-2 border-[#FEBF4C] rounded-md'>
-              <h1 className='w-full '>{gameText}</h1>
-            </div>
-            <div className='flex flex-col gap-2 '>
-              {activeTab == 'Attack' ? renderMoveSet : renderPlayerItems}
-            </div>
-            <button
-              className='w-full sm:hidden p-1 border-2 border-[#FEBF4C] bg-[#5e575b] rounded-md '
-              onClick={() => setIsOpen(prev => !prev)}
-            >
-              <div className='flex items-center place-content-center justify-between'>
-                {arrowDirection}
-                  <p>{activeTab}</p>
-                {arrowDirection}
+          <div className='flex flex-col gap-4 items-center h-full'>
+            <div className='h-full w-full flex-grow'>
+              <div className='flex items-start w-full h-1/3'>
+                <EntityUI 
+                  entity='player' 
+                  health={playerHealth} 
+                  maxHealth={100} 
+                />
               </div>
-            </button>     
-            <div className={`flex flex-col justify-center gap-2 w-full ${isOpen ? '' : 'hidden'} sm:grid sm:grid-cols-3`}>
+              <div className='flex w-full justify-between h-1/3 items-baseline'>
+                <img src={PlayerIdle} alt="" className='h-2/3'/>
+                <img src={EnemyIdle} alt="" className='h-full'/> 
+              </div>
+              <div className='flex items-end justify-end w-full h-1/3'>
+                <EntityUI
+                  entity='enemy'
+                  health={enemyHealth} 
+                  maxHealth={100} 
+                />
+              </div>
+            </div>
+            <div className='flex h-full w-full p-2 bg-[#5e575b] border-2 border-[#FEBF4C] rounded-md'>
+            {showTypewriter &&
+              <div style={{ display: 'inline-block' }}>
+                <Typewriter
+                  words={[gameText]}
+                  typeSpeed={10}
+                  deleteSpeed={1}
+                  cursor
+                />
+              </div>} 
+            </div>
+            <div className='flex flex-col gap-2'>
+              {activeTab == 'Attack' ? renderMoveSet : renderPlayerItems}
+            </div>   
+            <div className={`justify-center gap-2 w-full grid grid-cols-3`}>
               <button 
                 className={`border-2 border-[#FEBF4C] rounded-md py-1 ${!isBtnDisabled ? 'bg-[#5e575b]' : 'bg-[#4C4449]'}`}
                 onClick={() => tabChange('Attack')}
