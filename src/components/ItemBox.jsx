@@ -53,11 +53,11 @@ function ItemBox({ data, tempCart, setTempCart, setAlertMessage }) {
   return (
     <div className='bg-[#4C4449] border-2 border-[#FEBF4C] rounded-md flex flex-col text-lg p-1'>
       <div className='relative flex flex-col p-1'>
-        <div className='grid grid-cols-10 items-center w-full justify-between'>
+        <div className='grid grid-cols-10 items-center w-full'>
           <div className='col-span-2 sm:col-span-1 h-24 w-16 flex bg-cover bg-no-repeat bg-center items-center justify-center' style={{ backgroundImage: `url(${ItemFrame})` }}>
             <img src={data.icon} alt={data.value} className='h-10 w-10'/>
           </div>  
-          <div className='col-span-8 sm:col-span-4 text-justify font-dotgothic16-regular p-2'>
+          <div className='col-span-8 sm:col-span-4 text-justify font-dotgothic16-regular ml-2 p-2'>
             <p>{data.description}</p>
           </div>
           <div className='sm:col-span-2 font-dotgothic16-regular hidden sm:block'>

@@ -192,7 +192,7 @@ function App() {
       key: 'doubleSword',
       icon: DoubleEdgedSwordIcon,
       value: 'doubleSword',
-      description: 'Increase damage dealt and receive by 2x for 1 turn.',
+      description: 'Increase damage dealt and received by 2x for 1 turn.',
       quantity: playerItem.doubleSword,
       buyPrice: 200,
       sellPrice: 100

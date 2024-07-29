@@ -7,7 +7,11 @@ import ShieldIcon from '/images/shield.png'
 import StaffIcon from '/images/staff.png'
 import SwordIcon from '/images/sword.png'
 import PlayerIdle from '/images/wizard-idle.gif'
+import Attack1 from '/images/attack-1.gif'
+import Attack2 from '/images/attack-2.gif'
+import Attack3 from '/images/attack-3.gif'
 import EnemyIdle from '/images/demon-idle.gif'
+import EnemyAttack from '/images/enemy-attack.gif'
 
 function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem }) {
   const [playerHealth, setPlayerHealth] = useState(100)
@@ -20,6 +24,13 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
   const [isBarrierEnabled, setIsBarrierEnabled] = useState(false)
   const [isDoubleDamageEnabled, setIsDoubleDamageEnabled] = useState(false)
 
+  const [skillAnimation, setSkillAnimation] = useState()
+  const [playerAnimation, setPlayerAnimation] = useState(PlayerIdle)
+  const [enemyAnimation, setEnemyAnimation] = useState(EnemyIdle)
+
+  const [remountPlayerAttack, setRemountPlayerAttack] = useState(false)
+  const [remountEnemyAttack, setRemountEnemyAttack] = useState(false)
+
   const [activeTab, setActiveTab] = useState('Attack')
   
   const attack = ['Shield', 'Staff', 'Sword']
@@ -28,18 +39,34 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
   const navigate = useNavigate()
 
   useEffect(() => {
+    if(remountPlayerAttack == true){
+      setTimeout(() => {
+        setRemountPlayerAttack(false)
+      }, 850)
+    }
+  }, [remountPlayerAttack])
+
+  useEffect(() => {
+    if(remountEnemyAttack == true){
+      setTimeout(() => {
+        setRemountEnemyAttack(false)
+      }, 850)
+    }
+  }, [remountEnemyAttack])
+
+  useEffect(() => {
     if(playerHealth === 0){
       setGameText('You died after losing all your HP.')
       setTimeout(() => {
-        resetGame()
-      }, 1500)
+        navigate('/')
+      }, 3000)
       
     } else if(enemyHealth === 0){
       setGameText('You broke apart your enemy and won. Gain an additional 100 gold for winning.')
       setPlayerGold(prevPlayerGold => prevPlayerGold + 100)
       setTimeout(() => {
-        resetGame()
-      }, 1500)
+        navigate('/')
+      }, 3000)
     }
   }, [playerHealth, enemyHealth])
 
@@ -118,15 +145,6 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
     />
   })
 
-  const resetGame = () => {
-    setGameText('The Necromancer heals the wounded and resurrects the dead.')
-    setPlayerHealth('100')
-    setEnemyHealth('100')
-    setTimeout(() => {
-      setGameText('You have been granted an opportunity to attack. Choose an item from your arsenal to use.')
-    }, 1500)
-  }
-
   const flee = () => {
     setIsBtnDisabled(true)
     setGameText('...')
@@ -179,23 +197,33 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
       } else if(playerMove === 'Shield'){
         if(enemyMove === 'Sword'){
           result = 'Win'
+          setRemountPlayerAttack(true)
+          setSkillAnimation(<img src={Attack1} className="h-full absolute bottom-0 left-6"/>)
         } else if(enemyMove === 'Staff'){
           result = 'Lose'
+          setRemountEnemyAttack(true)
         }
       } else if(playerMove === 'Staff'){
         if(enemyMove === 'Shield'){
           result = 'Win'
+          setRemountPlayerAttack(true)
+          setSkillAnimation(<img src={Attack2} className="h-full absolute bottom-0"/>)
         } else if(enemyMove === 'Sword'){
           result = 'Lose'
+          setRemountEnemyAttack(true)
         }
       } else if(playerMove === 'Sword'){
         if(enemyMove === 'Staff'){
           result = 'Win'
+          setRemountPlayerAttack(true)
+          setSkillAnimation(<img src={Attack3} className="h-full absolute bottom-0 left-8"/>)
         } else if(enemyMove === 'Shield'){
           result = 'Lose'
+          setRemountEnemyAttack(true)
         }
       } else if(playerMove === 'failedToFlee'){
         result = 'Lose'
+        setRemountEnemyAttack(true)
       } else{
         setGameText('Invalid move.')
         setIsBtnDisabled(false)
@@ -298,7 +326,7 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
             ...prevState,
             [playerMove]: prevState[playerMove] - 1
           }))
-          setGameText('You draw a double-edged sword. Deal and receive 2x the damage. (Lasts for 1 turn)')
+          setGameText('You draw a double-edged sword. Deal and received 2x the damage. (Lasts for 1 turn)')
         } else{
           setGameText('You are out of Double-Edged Swords.')
         }
@@ -316,19 +344,25 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
         <h1 className='text-3xl font-press-start'>Combat</h1>
         <div className='h-full min-w-[320px] max-w-[800px] m-5 p-2 bg-[#2d282b] border-2 border-[#FEBF4C] rounded-md'>
           <div className='flex flex-col gap-4 items-center h-full'>
-            <div className='h-full w-full flex-grow'>
-              <div className='flex items-start w-full h-1/3'>
+            <div className='h-full w-full flex-grow flex flex-col'>
+              <div className='flex items-start w-full h-22'>
                 <EntityUI 
                   entity='player' 
                   health={playerHealth} 
                   maxHealth={100} 
                 />
               </div>
-              <div className='flex w-full justify-between h-1/3 items-baseline'>
-                <img src={PlayerIdle} alt="" className='h-2/3'/>
-                <img src={EnemyIdle} alt="" className='h-full'/> 
+              <div className='flex flex-grow w-full justify-between items-baseline'>
+                <div className='relative w-1/2'>
+                  <img src={playerAnimation} alt="" className='h-2/3 ml-4'/>
+                  {remountEnemyAttack && <img src={EnemyAttack} className='absolute bottom-0 border'/>}
+                </div>
+                <div className='relative'>
+                  <img src={enemyAnimation} alt="" className="h-full"/>
+                  {remountPlayerAttack && skillAnimation}
+                </div>  
               </div>
-              <div className='flex items-end justify-end w-full h-1/3'>
+              <div className='flex items-end justify-end w-full h-22'>
                 <EntityUI
                   entity='enemy'
                   health={enemyHealth} 
@@ -336,7 +370,7 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
                 />
               </div>
             </div>
-            <div className='flex h-full w-full p-2 bg-[#5e575b] border-2 border-[#FEBF4C] rounded-md'>
+            <div className='flex w-full p-2 bg-[#5e575b] border-2 border-[#FEBF4C] rounded-md'>
             {showTypewriter &&
               <div style={{ display: 'inline-block' }}>
                 <Typewriter

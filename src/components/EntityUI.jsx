@@ -15,7 +15,7 @@ const EntityIcon = ({ entity, health, maxHealth }) => {
           maxHealth={maxHealth}
         />
       </div>}
-      <div className='rounded-full border-2 border-[#FEBF4C] bg-[#5e575b] h-24 w-24 items-center flex overflow-hidden'>
+      <div className='rounded-full border-2 border-[#FEBF4C] bg-[#5e575b] h-20 w-20 items-center flex overflow-hidden'>
         <img src={Icon} alt="demonIcon" className='h-full w-full'/>
       </div>
       {isPlayer && <div className='flex pt-1'>

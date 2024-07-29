@@ -5,7 +5,7 @@ const HealthBar = ({ health, maxHealth, entity }) => {
   return (<>
     <div className='flex flex-col'>
       <h1 className={`${isPlayer ? 'text-left ml-1' : 'text-right mr-1'}`}>{isPlayer ? 'Player' : 'Enemy'}</h1>
-      <div className={`relative flex w-60 h-8 bg-black rounded-lg border-2 border-[#FEBF4C] items-center ${!isPlayer && 'justify-end'}`}>
+      <div className={`relative flex w-52 h-8 bg-black rounded-lg border-2 border-[#FEBF4C] items-center ${!isPlayer && 'justify-end'}`}>
         <div className='aboslute flex justify-center w-full'>
           {health == 0 && 'DEAD'}
         </div>
