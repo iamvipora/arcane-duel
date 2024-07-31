@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom'
-import ItemFrame from '/images/item-frame.png'
+import ItemFrame from '/images/icons/item-frame.png'
 import { IoMdArrowDropup, IoMdArrowDropdown } from "react-icons/io"
 
 function ShoppingCart({ items, playerItem, sellCart, buyCart, setPlayerItem, setSellCart, setBuyCart, checkOut, removeFromCart }) {
