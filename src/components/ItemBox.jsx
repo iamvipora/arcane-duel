@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import ItemFrame from '/images/item-frame.png'
+import ItemFrame from '/images/icons/item-frame.png'
 import { useLocation } from 'react-router-dom'
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
 
