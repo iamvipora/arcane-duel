@@ -1,39 +1,32 @@
 import React, { useState, useEffect } from 'react'
-import { Typewriter } from 'react-simple-typewriter'
 import { useNavigate } from 'react-router-dom'
-import ActionBox from '../components/ActionBox'
+import ActionButtons from '../components/ActionButtons'
 import EntityUI from '../components/EntityUI'
-import ShieldIcon from '/images/shield.png'
-import StaffIcon from '/images/staff.png'
-import SwordIcon from '/images/sword.png'
-import PlayerIdle from '/images/wizard-idle.gif'
-import Attack1 from '/images/attack-1.gif'
-import Attack2 from '/images/attack-2.gif'
-import Attack3 from '/images/attack-3.gif'
-import EnemyIdle from '/images/demon-idle.gif'
-import EnemyAttack from '/images/enemy-attack.gif'
+import PlayerIdle from '/images/animations/wizard-idle.gif'
+import DarkBolt from '/images/animations/dark-bolt.gif'
+import FireBomb from '/images/animations/fire-bomb.gif'
+import Lightning from '/images/animations/lightning.gif'
+import EnemyIdle from '/images/animations/demon-idle.gif'
+import EnemyAttack from '/images/animations/enemy-attack.gif'
 
 function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem }) {
   const [playerHealth, setPlayerHealth] = useState(100)
   const [enemyHealth, setEnemyHealth] = useState(100)
 
   const [gameText, setGameText] = useState('Initiating Combat.')
-  const [showTypewriter, setShowTypewriter] = useState(true)
 
   const [isBtnDisabled, setIsBtnDisabled] = useState(false)
   const [isBarrierEnabled, setIsBarrierEnabled] = useState(false)
   const [isDoubleDamageEnabled, setIsDoubleDamageEnabled] = useState(false)
 
   const [skillAnimation, setSkillAnimation] = useState()
-  const [playerAnimation, setPlayerAnimation] = useState(PlayerIdle)
-  const [enemyAnimation, setEnemyAnimation] = useState(EnemyIdle)
 
   const [remountPlayerAttack, setRemountPlayerAttack] = useState(false)
   const [remountEnemyAttack, setRemountEnemyAttack] = useState(false)
 
-  const [activeTab, setActiveTab] = useState('Attack')
+  const [activeTab, setActiveTab] = useState('menu')
   
-  const attack = ['Shield', 'Staff', 'Sword']
+  const attack = ['darkBolt', 'fireBomb', 'lightning']
   const itemName = [items[0].key, items[1].key, items[2].key]
 
   const navigate = useNavigate()
@@ -70,15 +63,6 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
     }
   }, [playerHealth, enemyHealth])
 
-  useEffect(() => {
-    setShowTypewriter(false);
-    const timer = setTimeout(() => {
-      setShowTypewriter(true)
-    }, 50)
-
-    return () => clearTimeout(timer)
-  }, [gameText])
-
   const handleClick = (playerMove) => {
     setIsBtnDisabled(true)
     setGameText('...')
@@ -93,57 +77,6 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
       }, 1500)  
     )
   }
-
-  const moveSet = [
-    {
-      icon: ShieldIcon,
-      value: 'Shield',
-      description: 'You hold your shield and stand your ground. Blocks swords and render them useless.',
-      handleClick: handleClick,
-      key: 'shield',
-      isBtnDisabled: isBtnDisabled
-    },
-    {
-      icon: StaffIcon,
-      value: 'Staff',
-      description: 'You raise your staff and cast a strong spell. This blast shields into smitherins.',
-      handleClick: handleClick,
-      key: 'staff',
-      isBtnDisabled: isBtnDisabled
-    },
-    {
-      icon: SwordIcon,
-      value: 'Sword',
-      description: 'You draw your Sword and strike your foe. With your speed, casters are defenseless.',
-      handleClick: handleClick,
-      key: 'sword',
-      isBtnDisabled: isBtnDisabled
-    }
-  ]
-
-  const playerItems = items.map(data => ({
-    ...data,
-    handleClick: handleClick,
-    isBtnDisabled: isBtnDisabled
-  }))
-    
-  const renderMoveSet = moveSet.map(data => {
-    return <ActionBox   
-      key={data.key}
-      data={data}
-      itemName={itemName}
-      items={items}
-    />
-  })
-
-  const renderPlayerItems = playerItems.map(data => {
-    return <ActionBox
-      key={data.key}
-      data={data}
-      itemName={itemName}
-      items={items}
-    />
-  })
 
   const flee = () => {
     setIsBtnDisabled(true)
@@ -164,22 +97,18 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
     }, 1500)
   }
 
-  const tabChange = (tab) => {
-    setActiveTab(tab)
-  }
-
   const pickEnemyMove = () => {
     const randomNumber = Math.random()
     let enemyMove = ''
   
     if(randomNumber >= 0 && randomNumber < 1/3){
-      enemyMove = 'Shield'
+      enemyMove = 'darkBolt'
     }
     else if(randomNumber >= 1/3 && randomNumber < 2/3){
-      enemyMove = 'Staff'
+      enemyMove = 'fireBomb'
     }
     else if(randomNumber >= 2/3 && randomNumber <= 1){
-      enemyMove = 'Sword'
+      enemyMove = 'lightning'
     }
     return enemyMove
   }
@@ -193,36 +122,36 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
 
     setTimeout(() => {
       if(playerMove === enemyMove){
-        result = 'Tie'
-      } else if(playerMove === 'Shield'){
-        if(enemyMove === 'Sword'){
-          result = 'Win'
+        result = 'tie'
+      } else if(playerMove === 'darkBolt'){
+        if(enemyMove === 'lightning'){
+          result = 'win'
           setRemountPlayerAttack(true)
-          setSkillAnimation(<img src={Attack1} className="h-full absolute bottom-0 left-6"/>)
-        } else if(enemyMove === 'Staff'){
-          result = 'Lose'
+          setSkillAnimation(<img src={DarkBolt} className="h-full absolute bottom-0 left-6"/>)
+        } else if(enemyMove === 'fireBomb'){
+          result = 'lose'
           setRemountEnemyAttack(true)
         }
-      } else if(playerMove === 'Staff'){
-        if(enemyMove === 'Shield'){
-          result = 'Win'
+      } else if(playerMove === 'fireBomb'){
+        if(enemyMove === 'darkBolt'){
+          result = 'win'
           setRemountPlayerAttack(true)
-          setSkillAnimation(<img src={Attack2} className="h-full absolute bottom-0"/>)
-        } else if(enemyMove === 'Sword'){
-          result = 'Lose'
+          setSkillAnimation(<img src={FireBomb} className="h-full absolute bottom-0"/>)
+        } else if(enemyMove === 'lightning'){
+          result = 'lose'
           setRemountEnemyAttack(true)
         }
-      } else if(playerMove === 'Sword'){
-        if(enemyMove === 'Staff'){
-          result = 'Win'
+      } else if(playerMove === 'lightning'){
+        if(enemyMove === 'fireBomb'){
+          result = 'win'
           setRemountPlayerAttack(true)
-          setSkillAnimation(<img src={Attack3} className="h-full absolute bottom-0 left-8"/>)
-        } else if(enemyMove === 'Shield'){
-          result = 'Lose'
+          setSkillAnimation(<img src={Lightning} className="h-full absolute bottom-0 left-8"/>)
+        } else if(enemyMove === 'darkBolt'){
+          result = 'lose'
           setRemountEnemyAttack(true)
         }
       } else if(playerMove === 'failedToFlee'){
-        result = 'Lose'
+        result = 'lose'
         setRemountEnemyAttack(true)
       } else{
         setGameText('Invalid move.')
@@ -231,13 +160,13 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
 
       (isBarrierEnabled || isDoubleDamageEnabled) ? setIsBtnDisabled(true) : setIsBtnDisabled(false)
 
-      if(result === 'Win'){
+      if(result === 'win'){
         if(enemyHealth - damage < 0){
           damage = enemyHealth
         }
         setEnemyHealth(prevEnemyHealth => prevEnemyHealth - damage)
         setGameText(`Your attack lands and your opponent loses ${damage} health.`)
-      } else if(result === 'Lose'){
+      } else if(result === 'lose'){
         if(isBarrierEnabled){
           setGameText(`You block your opponent's attack. Receive no damage.`)
         } else{
@@ -247,7 +176,7 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
           setPlayerHealth(prevPlayerHealth => prevPlayerHealth - damage)
           setGameText(`Your enemy lands their attack and you lose ${damage} health.`)
         }
-      } else if(result === 'Tie'){
+      } else if(result === 'tie'){
         setGameText('Nothing happens...')
       }
 
@@ -340,72 +269,52 @@ function Combat({ background, items, playerItem, setPlayerGold, setPlayerItem })
 
   return (
     <div className='min-h-screen h-full w-screen min-w-[375px] flex place-content-center text-white text-lg font-dotgothic16-regular bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${background})` }}>
-      <div className='min-w-[320px] max-w-[625px] flex flex-col my-5 text-center'>
-        <h1 className='text-3xl font-press-start'>Combat</h1>
+      <div className='flex flex-col my-5'>
+        <h1 className='text-3xl font-press-start text-center'>Combat</h1>
         <div className='h-full min-w-[320px] max-w-[800px] m-5 p-2 bg-[#2d282b] border-2 border-[#FEBF4C] rounded-md'>
           <div className='flex flex-col gap-4 items-center h-full'>
-            <div className='h-full w-full flex-grow flex flex-col'>
+            <div className='h-full w-full flex-grow flex flex-col border-2 border-[#FEBF4C] rounded-md p-2'>
               <div className='flex items-start w-full h-22'>
                 <EntityUI 
                   entity='player' 
-                  health={playerHealth} 
-                  maxHealth={100} 
+                  health={playerHealth}
                 />
               </div>
-              <div className='flex flex-grow w-full justify-between items-baseline'>
-                <div className='relative w-1/2'>
-                  <img src={playerAnimation} alt="" className='h-2/3 ml-4'/>
-                  {remountEnemyAttack && <img src={EnemyAttack} className='absolute bottom-0 border'/>}
+              <div className='flex flex-grow w-full justify-between gap-2 my-2'>
+                <div className='h-full w-1/2 flex items-end'>
+                <div className='relative w-1/2 flex items-end'>
+                    <img src={PlayerIdle} alt="" className=''/>
+                    {remountEnemyAttack && <img src={EnemyAttack} className='absolute bottom-0'/>}
+                  </div>
                 </div>
-                <div className='relative'>
-                  <img src={enemyAnimation} alt="" className="h-full"/>
-                  {remountPlayerAttack && skillAnimation}
+                <div className='h-full w-1/2 flex items-start justify-end'>
+                  <div className='relative flex'>
+                    <img src={EnemyIdle} alt="" className=""/>
+                    {remountPlayerAttack && skillAnimation}
+                  </div> 
                 </div>  
               </div>
               <div className='flex items-end justify-end w-full h-22'>
                 <EntityUI
                   entity='enemy'
-                  health={enemyHealth} 
-                  maxHealth={100} 
+                  health={enemyHealth}
                 />
               </div>
             </div>
-            <div className='flex w-full p-2 bg-[#5e575b] border-2 border-[#FEBF4C] rounded-md'>
-            {showTypewriter &&
-              <div style={{ display: 'inline-block' }}>
-                <Typewriter
-                  words={[gameText]}
-                  typeSpeed={10}
-                  deleteSpeed={1}
-                  cursor
+            <div className='w-full flex flex-col sm:flex-row gap-2'>
+              <div className='flex p-2 bg-[#5e575b] border-2 border-[#FEBF4C] rounded-md h-32 sm:h-28 md:w-[28rem]'>
+                {gameText}
+              </div>
+              <div>
+                <ActionButtons
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                  isBtnDisabled={isBtnDisabled}
+                  handleClick={handleClick}
+                  flee={flee}
+                  items={items}
                 />
-              </div>} 
-            </div>
-            <div className='flex flex-col gap-2'>
-              {activeTab == 'Attack' ? renderMoveSet : renderPlayerItems}
-            </div>   
-            <div className={`justify-center gap-2 w-full grid grid-cols-3`}>
-              <button 
-                className={`border-2 border-[#FEBF4C] rounded-md py-1 ${!isBtnDisabled ? 'bg-[#5e575b]' : 'bg-[#4C4449]'}`}
-                onClick={() => tabChange('Attack')}
-                disabled={isBtnDisabled}
-              >
-                Attack
-              </button>
-              <button 
-                className={`border-2 border-[#FEBF4C] rounded-md py-1 ${!isBtnDisabled ? 'bg-[#5e575b]' : 'bg-[#4C4449]'}`}
-                onClick={() => tabChange('Items')}
-                disabled={isBtnDisabled}
-                >
-                  Items
-                </button>
-              <button 
-                className={`border-2 border-[#FEBF4C] rounded-md py-1 ${!isBtnDisabled ? 'bg-[#5e575b]' : 'bg-[#4C4449]'}`} 
-                onClick={flee}
-                disabled={isBtnDisabled}
-              >
-                Flee
-              </button>
+              </div>
             </div>
           </div>
         </div>

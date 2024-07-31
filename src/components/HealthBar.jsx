@@ -1,6 +1,6 @@
 import React from 'react'
 
-const HealthBar = ({ health, maxHealth, entity }) => {
+const HealthBar = ({ health, entity }) => {
   const isPlayer = entity == 'player' ? true : false
   return (<>
     <div className='flex flex-col'>

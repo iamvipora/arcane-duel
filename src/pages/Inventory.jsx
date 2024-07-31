@@ -2,9 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import ItemBox from '../components/ItemBox'
 import ShoppingCart from '../components/ShoppingCart'
-import GoldCoinsIcon from '/images/gold-coins.png'
+import GoldCoinsIcon from '/images/icons/gold-coins.png'
 
-function Inventory({ background, items, playerGold, playerItem, sellCart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setPlayerGold, setPlayerItem, setSellCart, setTempCart, setShowCart, setAlertMessage, checkOut, addToCart, removeFromCart, FaShoppingCart }) {
+function Inventory({ background, items, playerGold, playerItem, sellCart, tempCart, showCart, isAlertVisible, alertMessage, fadeClass, setPlayerItem, setSellCart, setTempCart, setShowCart, setAlertMessage, checkOut, addToCart, removeFromCart, FaShoppingCart }) {
   const renderItemBox = items.map((data) => {
     return <ItemBox
       key={data.key}
@@ -46,9 +46,9 @@ function Inventory({ background, items, playerGold, playerItem, sellCart, tempCa
         </div>
       }
       <div className='min-h-screen h-full w-screen min-w-[375px] flex place-content-center text-white text-lg bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${background})` }}>
-        <div className='max-w-[1200px] flex flex-col my-5 font-press-start text-center'>
+      <div className='flex flex-col my-5 text-center font-press-start'>
           <h1 className='text-3xl'>Inventory</h1>
-          <div className='flex min-w-[320px] h-full m-5'>
+          <div className='flex min-w-[320px] max-w-[1200px] h-full m-5'>
             <div className='h-full p-2 bg-[#2d282b] border-2 border-[#FEBF4C] rounded-md'>
               <div className='flex justify-between font-dotgothic16-regular '>
                 <div className='flex items-center justify-between'>
@@ -77,24 +77,6 @@ function Inventory({ background, items, playerGold, playerItem, sellCart, tempCa
               
               <div className='flex flex-col gap-2'>
                 {isAlertVisible && <p className={`font-dotgothic16-regular ${fadeClass}`}>{alertMessage}</p>}       
-              </div>
-              <div className='flex flex-col gap-2 p-4'>
-                <button onClick={()=> {setPlayerItem(prevState => ({
-                  potion: prevState.potion + 1,
-                  barrier: prevState.barrier + 1,
-                  doubleSword: prevState.doubleSword + 1
-                }))}}>
-                  Add supplies
-                </button>
-                <button onClick={() =>{setPlayerItem({potion: 0, barrier: 0, doubleSword: 0})}}>
-                  Reset supplies
-                </button>
-                <button onClick={() =>{setPlayerGold(prevState => prevState + 1000)}}>
-                  Add gold
-                </button>
-                <button onClick={() =>{setPlayerGold(0)}}>
-                  Reset gold
-                </button>
               </div>
             </div>
             <div className='ml-2 hidden lg:block'>

@@ -6,11 +6,11 @@ import Combat from './pages/Combat'
 import Inventory from './pages/Inventory'
 import Shop from './pages/Shop'
 import AudioPlayer from './components/BgAndAudio'
-import PotionIcon from '/images/potion.png'
-import BarrierIcon from '/images/barrier.png'
-import DoubleEdgedSwordIcon from '/images/2-sword.png'
-import BgAnimated from '/images/bg-animated.gif'
-import BgStatic from '/images/bg-static.png'
+import PotionIcon from '/images/icons/potion.png'
+import BarrierIcon from '/images/icons/barrier.png'
+import DoubleEdgedSwordIcon from '/images/icons/2-sword.png'
+import BgAnimated from '/images/background/bg-animated.gif'
+import BgStatic from '/images/background/bg-static.png'
 import { FaShoppingCart } from "react-icons/fa"
 
 function App() {
